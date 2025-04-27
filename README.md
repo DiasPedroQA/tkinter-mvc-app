@@ -8,15 +8,22 @@ O desenvolvimento é orientado por **TDD (Test-Driven Development)**, visando ga
 
 ## Estrutura do projeto
 
-app/ ├── backend/ │ ├── controller/ │ └── model/ ├── frontend/ └── main.py
+```
+app/
+├── backend/
+│   ├── controller/
+│   └── model/
+├── frontend/
+└── main.py
 
-tests/ ├── backend/ │ ├── controller/ │ └── model/ └── frontend/
+tests/
+├── backend/
+│   ├── controller/
+│   └── model/
+└── frontend/
 
 venv/ (ambiente virtual)
-
-yaml
-Copiar
-Editar
+```
 
 ---
 
@@ -57,3 +64,10 @@ Para executar os testes:
 
 ```bash
 pytest tests/
+```
+
+---
+
+## Licença
+
+Distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais informações.
