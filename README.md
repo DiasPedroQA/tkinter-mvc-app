@@ -8,7 +8,7 @@ O desenvolvimento é orientado por **TDD (Test-Driven Development)**, visando ga
 
 ## Estrutura do projeto
 
-```
+```bash
 app/
 ├── backend/
 │   ├── controller/
@@ -30,12 +30,14 @@ venv/ (ambiente virtual)
 ## Como rodar o projeto
 
 1. Clone o repositório:
+
     ```bash
     git clone https://github.com/seu-usuario/tkinter-mvc-app.git
     cd tkinter-mvc-app
     ```
 
 2. Crie e ative o ambiente virtual:
+
     ```bash
     python -m venv venv
     # Ativar no Windows
@@ -45,11 +47,13 @@ venv/ (ambiente virtual)
     ```
 
 3. Instale as dependências:
+
     ```bash
     pip install -r requirements.txt
     ```
 
 4. Execute o app:
+
     ```bash
     python app/main.py
     ```
