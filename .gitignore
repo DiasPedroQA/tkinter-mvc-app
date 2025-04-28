@@ -178,3 +178,8 @@ cython_debug/
 
 # PyCharm project files
 *.pyc
+
+# .gitignore
+*.pyo
+*.pyd
+*.db

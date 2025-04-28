@@ -9,37 +9,41 @@ O desenvolvimento foi feito com **TDD (Test-Driven Development)**, usando `pytes
 ## 🛠 Estrutura do Projeto
 
 ```bash
-.vscode/
-app/
-├── backend/
-│   ├── controller/
-│   │   └── app_controller.py
-│   ├── model/
-│   │   └── app_model.py
-├── frontend/
-│   └── app_view.py
-├── main.py
-tests/
-├── backend/
-│   ├── controller/
-│   │   └── test_app_controller.py
-│   ├── model/
-│   │   └── test_app_model.py
-├── frontend/
-│   └── test_app_view.py
-├── conftest.py
-.github/
-├── workflows/
-│   └── python-app.yml
-venv/ (ambiente virtual)
-.gitignore
-LICENSE
-README.md
-requirements.txt
-.editorconfig
-pyproject.toml
-.pre-commit-config.yaml
-Makefile
+tkinter-mvc-app/
+├── ├── .github/
+│   │   └── workflows/
+│   │       └── python-app.yml
+│   ├── .venv/
+│   ├── .vscode/
+│   ├── app/
+│   │   ├── backend/
+│   │   │   ├── controller/
+│   │   │   │   └── app_controller.py
+│   │   │   ├── logs/
+│   │   │   │   └── app_logs.py
+│   │   │   ├── model/
+│   │   │   │   └── app_model.py
+│   │   │   └── tools/
+│   │   │       └── app_tools.py
+│   │   ├── frontend/
+│   │   └── main.py
+│   ├── htmlcov/
+│   ├── tests/
+│   │   ├── backend/
+│   │   │   ├── controller/
+│   │   │   ├── logs/
+│   │   │   ├── model/
+│   │   │   └── tools/
+│   │   ├── frontend/
+│   ├── .coverage
+│   ├── .editorconfig
+│   ├── .gitignore
+│   ├── .pre-commit-config.yaml
+│   ├── LICENSE
+│   ├── Makefile
+│   ├── pyproject.toml
+│   ├── README.md
+│   └── requirements.txt
 ```
 
 ---
@@ -99,10 +103,10 @@ Para rodar todos os testes, basta usar o comando:
 make test
 ```
 
-Ou então, execute diretamente com o pytest:
+Ou então, execute diretamente com o pytest com coverage junto (cobertura de código):
 
 ```bash
-pytest tests/
+pytest --cov=app tests/ --cov-report=html
 ```
 
 ---
