@@ -7,3 +7,4 @@ mypy==0.910
 pytest-cov==2.12.1
 beautifulsoup4==4.10.0
 requests==2.26.0
+pydantic==2.11.4
