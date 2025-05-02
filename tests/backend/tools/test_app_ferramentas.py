@@ -10,16 +10,13 @@ import pytest
 
 from app.backend.tools.app_ferramentas import AnaliseDeCaminho
 
-arquivo_teste: str = "/home/pedro-pm-dias/base-cv.odt"
-# arquivo_teste: str = "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
-
 
 @pytest.fixture
-def caminho_teste(tmp_path: Path) -> Path:
+def caminho_teste() -> Path:
     """Cria um caminho de teste com um arquivo temporário."""
-    arquivo = tmp_path / arquivo_teste
-    arquivo.write_text("conteúdo de teste")
-    return arquivo
+    arquivo_teste: str = "/home/pedro-pm-dias/API_LOCAL/GitHub/tkinter-mvc-app/.logs/app.log"
+    # arquivo_teste: str = "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
+    return Path(arquivo_teste)
 
 
 def test_init_analise(caminho_teste: Path) -> None:
@@ -68,7 +65,7 @@ def test_dados_localizacao(caminho_teste: Path) -> None:
     analise._obter_dados_localizacao()
     local = analise.resultado.localizacao
 
-    assert local["nome_do_item"] == "base-cv.odt"
+    assert local["nome_do_item"] == "app.log"
     assert local["pasta_pai"] == str(caminho_teste.parent)
     assert local["tipo_caminho"] == "absoluto"
     assert isinstance(local["raiz"], str)
