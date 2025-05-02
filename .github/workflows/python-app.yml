@@ -17,27 +17,31 @@ jobs:
       - name: 🐍 Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'  # Ajuste conforme sua versão local
+          python-version: '3.11'
 
       - name: 📦 Instalar dependências
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          pip install pytest coverage flake8
 
-      - name: ✅ Rodar testes com pytest
+      - name: ✅ Rodar testes com cobertura
         run: |
-          pytest --maxfail=1 --disable-warnings -q
-
-      - name: 🔍 Checagem de estilo (opcional - flake8)
-        run: |
-          pip install flake8
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        continue-on-error: true
-
-      - name: 📊 Cobertura de testes (opcional - coverage)
-        run: |
-          pip install coverage
           coverage run -m pytest
-          coverage report -m
+          coverage report --fail-under=80
+
+      - name: 📊 Gerar arquivo de cobertura (coverage.xml)
+        run: coverage xml
+
+      - name: 📤 Upload de cobertura para Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: unittests
+          name: python-ci
+
+      - name: 🔍 Checagem de estilo com flake8 (não falha build)
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         continue-on-error: true
