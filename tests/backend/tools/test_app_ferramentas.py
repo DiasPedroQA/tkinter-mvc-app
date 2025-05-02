@@ -10,7 +10,8 @@ import pytest
 
 from app.backend.tools.app_ferramentas import AnaliseDeCaminho
 
-arquivo_teste: str = "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
+arquivo_teste: str = "/home/pedro-pm-dias/base-cv.odt"
+# arquivo_teste: str = "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
 
 
 @pytest.fixture
@@ -67,7 +68,7 @@ def test_dados_localizacao(caminho_teste: Path) -> None:
     analise._obter_dados_localizacao()
     local = analise.resultado.localizacao
 
-    assert local["nome_do_item"] == "bookmarks.html"
+    assert local["nome_do_item"] == "base-cv.odt"
     assert local["pasta_pai"] == str(caminho_teste.parent)
     assert local["tipo_caminho"] == "absoluto"
     assert isinstance(local["raiz"], str)
