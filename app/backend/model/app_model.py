@@ -1,78 +1,174 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=E0401
+# pylint: disable=R0911
 
-"""Modelo de Caminho para validação de arquivos e diretórios"""
+"""
+Módulo de modelos para manipulação de arquivos e pastas.
 
-import json
-from typing import List, Optional
-from backend.tools.app_tools import Tools
+Contém:
+- ArquivoModel: interface para operações com arquivos (criar, ler, atualizar).
+- PastaModel: interface para operações com pastas (criar, ler, atualizar).
+"""
+
+# import shutil
+# from typing import Optional, Dict, List
+# from pathlib import Path
+
+# from app.backend.tools.app_ferramentas import validar_caminho
 
 
-class FileSystemModel:
-    """
-    Modelo para representar e validar caminhos de arquivos e diretórios.
-    Este modelo encapsula a lógica de validação e fornece métodos
-    para acessar informações sobre o caminho.
+# class ManipuladorDeCaminhos:
+#     """
+#     Classe para criação, leitura e atualização de arquivos e pastas.
+#     """
 
-    Atributos:
-        path (str): Caminho original fornecido.
-        normalized_path (str): Caminho normalizado.
-        metadados (dict): Metadados do caminho.
-        validacao_basica (dict): Resultado da validação básica.
-        sistema_arquivos (dict): Dados do sistema de arquivos.
-        erros (List): Lista de erros encontrados durante a validação.
+#     @staticmethod
+#     def criar_caminho(caminho_a_criar: str, conteudo: Optional[str] = None) -> Dict[str, str]:
+#         """
+#         Cria arquivo (se conteúdo for passado) ou pasta (se não for).
+#         """
+#         # caminho_arquivo = True, conteudo = False
+#         # caminho_arquivo = False, conteudo = True
+#         # caminho_pasta = True, conteudo = True
+#         # caminho_pasta = False, conteudo = False
 
-    Métodos:
-        _generate_metadata(): Gera os metadados do caminho.
-        _generate_basic_validation(): Gera a validação básica.
-        _generate_filesystem_data(): Gera os dados do sistema de arquivos.
-        is_valid(): Verifica se o caminho é válido.
-        get_path_type(): Retorna o tipo do caminho (arquivo ou diretório).
-        to_json(): Retorna a representação JSON do modelo.
-    """
+#         caminho = Path(caminho_a_criar)
+#         if conteudo is None:
+#             try:
+#                 with open(file=caminho_a_criar, mode="r", encoding="utf-8") as criar_arquivo:
+#                     peso = criar_arquivo.write(conteudo)
+#                 return {
+#                     "status": "sucesso",
+#                     "mensagem": f"Arquivo criado em {caminho} - peso: {peso}"}
+#             except FileNotFoundError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "Diretório não encontrado para criação do arquivo.",
+#                 }
+#             except PermissionError:
+#                 return {"status": "erro", "mensagem": "Permissão negada para criar o arquivo."}
+#             except IsADirectoryError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "O caminho aponta para uma pasta, não um arquivo.",
+#                 }
+#             except OSError as e:
+#                 return {"status": "erro", "mensagem": f"Erro do sistema ao criar arquivo: {str(e)}"}
+#         else:
+#             try:
+#                 caminho.parent.mkdir(parents=True, exist_ok=True)
+#                 caminho.write_text(conteudo, encoding="utf-8")
+#                 return {"status": "sucesso", "mensagem": f"Pasta criada em {caminho}"}
+#             except FileNotFoundError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "Caminho base inexistente para criar a pasta.",
+#                 }
+#             except FileExistsError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "Já existe uma pasta com esse nome no local."
+#                 }
+#             except PermissionError:
+#                 return {"status": "erro", "mensagem": "Permissão negada para criar a pasta."}
+#             except NotADirectoryError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "Um dos componentes do caminho não é uma pasta.",
+#                 }
 
-    def __init__(self, path: str):
-        self.tools = Tools()
-        self.path = path
-        self.normalized_path = self.tools.normalize_path(path)
-        self.metadados = self._generate_metadata()
-        self.validacao_basica = self._generate_basic_validation()
-        self.sistema_arquivos = self._generate_filesystem_data()
-        self.erros: List = []
+#     @staticmethod
+#     def ler_caminho(caminho: str) -> Dict[str, str]:
+#         """
+#         Lê um arquivo (retorna conteúdo) ou pasta (retorna lista de itens).
+#         """
+#         path = Path(caminho)
+#         if validar_caminho(caminho, "arquivo") == "Sim":
+#             try:
+#                 conteudo: str = path.read_text(encoding="utf-8")
+#                 return {"status": "sucesso", "conteudo": conteudo}
+#             except FileNotFoundError:
+#                 return {"status": "erro", "mensagem": "Arquivo não encontrado."}
+#             except PermissionError:
+#                 return {"status": "erro", "mensagem": "Permissão negada para leitura do arquivo."}
+#             except IsADirectoryError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "O caminho fornecido é uma pasta, não um arquivo.",
+#                 }
+#         elif validar_caminho(caminho, "pasta") == "Sim":
+#             try:
+#                 conteudo: List[str] = [item.name for item in path.iterdir()]
+#                 return {"status": "sucesso", "conteudo": conteudo}
+#             except FileNotFoundError:
+#                 return {"status": "erro", "mensagem": "Pasta não encontrada."}
+#             except PermissionError:
+#                 return {"status": "erro", "mensagem": "Permissão negada para leitura da pasta."}
+#             except NotADirectoryError:
+#                 return {"status": "erro", "mensagem": "O caminho fornecido não é uma pasta."}
+#         else:
+#             existencia = validar_caminho(caminho, 'existe')
+#             return {"status": "erro", "mensagem": f"Erro: caminho inválido. Existe? {existencia}"}
 
-    def _generate_metadata(self) -> dict:
-        """Gera os metadados do caminho"""
-        return {
-            "caminho_original": self.path,
-            "caminho_normalizado": self.normalized_path,
-            "timestamp_validacao": self.tools.get_current_timestamp(),
-        }
+#     @staticmethod
+#     def atualizar_caminho(
+#         caminho: str,
+#         novo_conteudo: Optional[str] = None,
+#         novo_nome: Optional[str] = None,
+#         nova_localizacao: Optional[str] = None,
+#     ) -> Dict[str, str]:
+#         """
+#         Atualiza conteúdo (se for arquivo), nome e/ou localização (arquivo ou pasta).
+#         """
+#         path = Path(caminho)
+#         tipo = "arquivo" if path.is_file() else "pasta" if path.is_dir() else None
+#         if tipo is None:
+#             return "Erro: caminho não é um arquivo nem uma pasta."
 
-    def _generate_basic_validation(self) -> dict:
-        """Gera a validação básica usando os métodos da Tools"""
-        return self.tools.generate_basic_validation(self.normalized_path)
+#         if tipo == "arquivo" and novo_conteudo is not None:
+#             try:
+#                 path.write_text(novo_conteudo, encoding="utf-8")
+#                 return {"status": "sucesso", "mensagem": f"Arquivo atualizado: {caminho}"}
+#             except FileNotFoundError:
+#                 return {"status": "erro", "mensagem": "Arquivo original não encontrado."}
+#             except PermissionError:
+#                 return {"status": "erro", "mensagem": "Permissão negada para atualizar o arquivo."}
+#             except IsADirectoryError:
+#                 return {"status": "erro", "mensagem": "O caminho é uma pasta, não um arquivo."}
+#             except OSError as e:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": f"Erro do sistema ao atualizar o arquivo: {str(e)}",
+#                 }
 
-    def _generate_filesystem_data(self) -> dict:
-        """Gera os dados do sistema de arquivos"""
-        return {
-            "estatisticas": self.tools.generate_filesystem_stats(self.normalized_path),
-            "permissoes": self.tools.generate_permissions(self.normalized_path),
-        }
+#         if novo_nome or nova_localizacao:
+#             try:
+#                 destino = Path(nova_localizacao) if nova_localizacao else path.parent
+#                 destino.mkdir(parents=True, exist_ok=True)
+#                 novo_nome_final = novo_nome or path.name
+#                 novo_caminho = destino / novo_nome_final
+#                 shutil.move(str(path), str(novo_caminho))
+#                 return {"status": "sucesso", "mensagem": f"Pasta atualizada: {caminho}"}
+#             except FileNotFoundError:
+#                 return {"status": "erro", "mensagem": "Pasta original não encontrada."}
+#             except FileExistsError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "Já existe uma pasta com o novo nome no destino."}
+#             except PermissionError:
+#                 return {
+#                     "status": "erro",
+#                     "mensagem": "Permissão negada para renomear ou mover a pasta.",
+#                 }
+#             except NotADirectoryError:
+#                 return {"status": "erro", "mensagem": "O caminho original não é uma pasta."}
 
-    def is_valid(self) -> bool:
-        """Verifica se o caminho é válido"""
-        return self.validacao_basica.get('valido', False)
+#         return f"{tipo.capitalize()} atualizado com sucesso."
 
-    def get_path_type(self) -> Optional[str]:
-        """Retorna o tipo do caminho"""
-        return self.validacao_basica.get('tipo')
 
-    def to_json(self) -> str:
-        """Retorna a representação JSON do modelo"""
-        dados_completos: dict = {
-            "metadados": self.metadados,
-            "validacao_basica": self.validacao_basica,
-            "sistema_arquivos": self.sistema_arquivos,
-            "erros": self.erros,
-        }
-        return json.dumps(dados_completos, indent=4, ensure_ascii=False)
+# main.py
+# from analise_de_caminho import AnaliseDeCaminho
+
+# if __name__ == "__main__":
+#     C = "/home/pedro-pm-dias/Downloads/Firefox/"
+#     analise = AnaliseDeCaminho(caminho=C)
+#     print(analise)

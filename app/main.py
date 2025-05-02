@@ -1,51 +1,53 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=E0401
+# mypy: ignore-errors
+# pylint: disable=C0103, C0114, C0115, C0116, C0301, W0613, W0621, W0718
 
 """
-Modelo de Caminho para validação de arquivos e diretórios
-Este módulo contém a classe FileSystemModel, que representa um caminho
-de arquivo ou diretório e fornece métodos para validação e
-informações adicionais.
+Simulador de operações CRUD para arquivos e diretórios.
+Permite criar, ler e atualizar caminhos com respostas padronizadas.
 """
 
-from backend.tools.app_tools import Tools
+# from app.backend.controller.app_controller import CaminhoController
+# from app.backend.tools.app_ferramentas import Validador
 
-# from backend.model.app_model import FileSystemModel
+# # Caminhos reais
+# BASE_REAL = "/home/pedro-pm-dias/Downloads"
+# CAMINHO_REAL_PASTA = f"{BASE_REAL}/Firefox"
+# CAMINHO_REAL_ARQUIVO = f"{CAMINHO_REAL_PASTA}/bookmarks.html"
+
+# # Caminhos fake
+# BASE_FAKE = "/fake/teste"
+# CAMINHO_FAKE_PASTA = f"{BASE_FAKE}/pasta_fake"
+# CAMINHO_FAKE_ARQUIVO = f"{CAMINHO_FAKE_PASTA}/arquivo_fake.txt"
 
 
-# Criando instância de Tools
-ferramentas = Tools()
-print(f"Sistema operacional do servidor -> {ferramentas.os_name}")
+# def processar_entrada(entrada: dict, validador: Validador = Validador()) -> dict:
+#     caminho = entrada.get("caminho")
+#     acao = entrada.get("acao")
 
-arquivo: str = "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
-# Normalizando o caminho
-caminho_normalizado = ferramentas.normalize_path(path=arquivo)
-print(f"Caminho normalizado: {caminho_normalizado}")
+#     # FLUXO DE LEITURA: só se for um caminho real
+#     if acao == "ler":
+#         if not validador.existe(caminho):
+#             return {"status": "erro", "mensagem": "Caminho real não encontrado"}
 
-# Verificar o tipo do caminho
-tipo_caminho = ferramentas.get_path_type(path=arquivo)
-print(f"Tipo do caminho: {tipo_caminho}")
+#         if validador.eh_arquivo(caminho):
+#             print(f"[LOG] Lendo ARQUIVO real: {caminho}")
+#         elif validador.eh_pasta(caminho):
+#             print(f"[LOG] Lendo PASTA real: {caminho}")
+#         else:
+#             return {"status": "erro", "mensagem": "Tipo de caminho não identificado"}
 
-# Validando um caminho de arquivo
-validacao_basica = ferramentas.generate_basic_validation(path=arquivo)
-print(f"Validação para {arquivo}: {validacao_basica}")
+#     else:
+#         caminho_fake = gerar_caminho_fake(caminho)
+#         entrada["caminho"] = caminho_fake
+#         print(f"[LOG] {acao.upper()} em caminho FAKE: {caminho_fake}")
 
-# Obtendo estatísticas
-stats = ferramentas.generate_filesystem_stats(path=arquivo)
-print(f"Estatísticas: {stats}")
+#     return CaminhoController().executar(entrada)
 
-# Obtendo permissões
-permissoes = ferramentas.generate_permissions(path=arquivo)
-print(f"Permissões: {permissoes}")
 
-# # Criando modelo para um arquivo/diretório
-# path_model = FileSystemModel("/home/pedro-pm-dias/Downloads/Firefox/")
-
-# # Acessando propriedades
-# print(f"Caminho normalizado: {path_model.normalized_path}")
-# print(f"Tipo: {path_model.get_path_type()}")
-# print(f"É válido? {path_model.is_valid()}")
-
-# # Obtendo representação JSON
-# print("Representação completa:")
-# print(path_model.to_json())
+# def gerar_caminho_fake(caminho_usuario: str) -> str:
+#     """
+#     Cria uma rota fake a partir do caminho informado pelo usuário
+#     Ex: "/documentos/novo.txt" → "/fake/teste/documentos/novo.txt"
+#     """
+#     return f"{BASE_FAKE}/{caminho_usuario.removeprefix(" / ")}"

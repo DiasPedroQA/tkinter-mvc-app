@@ -1,83 +1,79 @@
-# from model import PathModel
-# from tools import normalize_path, is_absolute_path, path_exists, get_path_type
-
-# class PathController:
-#     def __init__(self):
-#         self.model = PathModel()
-
-#     def validate_path(self, raw_path):
-#         """Valida um caminho e armazena o resultado no model"""
-#         try:
-#             path = normalize_path(raw_path)
-
-#             if not is_absolute_path(path):
-#                 raise ValueError("Caminho deve ser absoluto")
-
-#             if not path_exists(path):
-#                 raise FileNotFoundError("Caminho não existe")
-
-#             path_type = get_path_type(path)
-
-#             self.model.add_valid_path({
-#                 'original': raw_path,
-#                 'normalized': path,
-#                 'type': path_type
-#             })
-
-#             return {
-#                 'status': 'valid',
-#                 'path': path,
-#                 'type': path_type
-#             }
-#         except Exception as e:
-#             self.model.add_invalid_path({
-#                 'original': raw_path,
-#                 'error': str(e)
-#             })
-#             return {
-#                 'status': 'invalid',
-#                 'path': raw_path,
-#                 'error': str(e)
-#             }
-
-#     def get_validation_stats(self):
-#         return self.model.get_stats()
-
-# from typing import Union
-# from pathlib import Path
-# import platform
-
-# from backend.models.app_model import AppModel
+# -*- coding: utf-8 -*-
+# mypy: ignore-errors
+# pylint: disable=C0103, C0114, C0115, C0116, C0301, W0613, W0621, W0718
 
 
-# class AppController:
-#     """Controla as operações da aplicação.
+"""
+Simulador de operações CRUD para arquivos e diretórios.
+Permite criar, ler e atualizar caminhos com respostas padronizadas.
+"""
 
-#     Este controlador gerencia informações sobre o sistema operacional
-#     e o usuário atual.
-#     """
-#     def __init__(self) -> None:
-#         """Configuração inicial do controlador de aplicativo."""
-#         self.sistema_operacional = self.detectar_sistema_operacional()
-#         # self._nome_usuario = self.obter_nome_usuario()
+# from app.backend.model.app_model import ArquivoModel, PastaModel
+# from app.backend.tools.app_ferramentas import Validador
 
-#     def detectar_sistema_operacional(self) -> str:
-#         """Detecta o sistema operacional do usuário."""
 
-#         sistema = platform.system()
-#         if sistema == "Windows":
-#             return "Windows"
-#         elif sistema == "Linux":
-#             return "Linux"
-#         elif sistema == "Darwin":
-#             return "macOS"
+# class CaminhoController(Validador):
+#     def executar(self, entrada: dict) -> dict:
+#         caminho = entrada.get("caminho")
+#         acao = entrada.get("acao")
+
+#         # Determina tipo do caminho
+#         tipo = self._identificar_tipo(caminho, entrada)
+
+#         if tipo == "arquivo":
+#             return self._executar_arquivo(acao, entrada)
+#         elif tipo == "pasta":
+#             return self._executar_pasta(acao, entrada)
 #         else:
-#             raise ValueError("Sistema operacional não suportado.")
+#             return {"status": "erro", "mensagem": "Tipo de caminho não identificado"}
 
-#     def obter_nome_usuario(self, usuario_padrao: str = "~") -> Union[str, Path]:
-#         """Obtém o nome do usuário atual do sistema operacional."""
-#         nome_usuario = Path.home()
-#         if nome_usuario == Path(usuario_padrao):
-#             return nome_usuario
+#     def _identificar_tipo(self, caminho: str, entrada: dict) -> str:
+#         """
+#         Tenta identificar se o caminho é de um arquivo ou pasta,
+#         com base na existência real ou nos dados da entrada.
+#         """
+#         if self.existe(caminho):
+#             if self.eh_arquivo(caminho):
+#                 return "arquivo"
+#             if self.eh_pasta(caminho):
+#                 return "pasta"
 #         else:
-#             raise ValueError("Nome de usuário inválido.")
+#             # Inferência baseada no tipo de conteúdo
+#             conteudo = entrada.get("conteudo")
+#             return "arquivo" if isinstance(conteudo, str) else "pasta"
+#         return None
+
+#     def _executar_arquivo(self, acao: str, entrada: dict) -> dict:
+#         model = ArquivoModel()
+#         caminho = entrada["caminho"]
+
+#         if acao == "atualizar":
+#             return model.atualizar(
+#                 caminho,
+#                 novo_conteudo=entrada.get("conteudo"),
+#                 novo_nome=entrada.get("novo_nome"),
+#                 nova_localizacao=entrada.get("nova_localizacao"),
+#             )
+#         elif acao == "criar":
+#             return model.criar(caminho, entrada.get("conteudo", ""))
+#         elif acao == "ler":
+#             return model.ler(caminho)
+#         else:
+#             return {"status": "erro", "mensagem": "Ação inválida para arquivo"}
+
+#     def _executar_pasta(self, acao: str, entrada: dict) -> dict:
+#         model = PastaModel()
+#         caminho = entrada["caminho"]
+
+#         if acao == "atualizar":
+#             return model.atualizar(
+#                 caminho,
+#                 novo_nome=entrada.get("novo_nome"),
+#                 nova_localizacao=entrada.get("nova_localizacao"),
+#             )
+#         elif acao == "criar":
+#             return model.criar(caminho)
+#         elif acao == "ler":
+#             return model.ler(caminho)
+#         else:
+#             return {"status": "erro", "mensagem": "Ação inválida para pasta"}
