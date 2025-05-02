@@ -29,6 +29,10 @@ jobs:
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
           pip install pytest pytest-cov flake8
 
+      - name: 🔍 Run flake8 (does not fail build)
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        continue-on-error: true
+
       - name: ✅ Run tests with coverage
         run: |
           pytest --cov=. --cov-branch --cov-report=xml --junitxml=junit.xml
@@ -48,7 +52,3 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: 🔍 Run flake8 (does not fail build)
-        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        continue-on-error: true
