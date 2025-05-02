@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=R0911
+# pylint: disable=C, R0911
 
 """
 Módulo de modelos para manipulação de arquivos e pastas.
