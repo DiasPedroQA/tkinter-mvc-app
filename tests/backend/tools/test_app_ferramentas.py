@@ -33,7 +33,7 @@ def test_deteccao_comparacao_validacao(caminho_teste: Path) -> None:
     analise._detectar_comparar_e_validar()
 
     mensagens_possiveis: list[str] = [
-        "O caminho existe.",
+        "O caminho pode existir.",
         "Arquivo não encontrado.",
         "Não é um diretório.",
         "Permissão negada.",

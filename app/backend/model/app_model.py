@@ -1,5 +1,6 @@
+# main.py
 # -*- coding: utf-8 -*-
-# pylint: disable=C, R0911
+# pylint: disable=C, R0911, E0401
 
 """
 Módulo de modelos para manipulação de arquivos e pastas.
@@ -13,7 +14,7 @@ Contém:
 # from typing import Optional, Dict, List
 # from pathlib import Path
 
-# from app.backend.tools.app_ferramentas import validar_caminho
+# from backend.tools.app_ferramentas import validar_caminho
 
 
 # class ManipuladorDeCaminhos:
@@ -164,11 +165,16 @@ Contém:
 
 #         return f"{tipo.capitalize()} atualizado com sucesso."
 
+import os
+import sys
 
-# main.py
-# from analise_de_caminho import AnaliseDeCaminho
+# Adiciona a raiz do projeto ao sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-# if __name__ == "__main__":
-#     C = "/home/pedro-pm-dias/Downloads/Firefox/"
-#     analise = AnaliseDeCaminho(caminho=C)
-#     print(analise)
+
+from app.backend.tools.app_ferramentas import AnaliseDeCaminho
+
+if __name__ == "__main__":
+    C = "/home/pedro-pm-dias/Downloads/Firefox/"
+    analise = AnaliseDeCaminho(caminho=C)
+    print(analise)

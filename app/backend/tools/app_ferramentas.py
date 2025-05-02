@@ -53,7 +53,7 @@ class AnaliseDeCaminho:
             caminho_path = Path(caminho)
             try:
                 stats = caminho_path.stat()
-                self.resultado.mensagem_existencia = "O caminho existe."
+                self.resultado.mensagem_existencia = "O caminho pode existir."
                 self.resultado.permissoes = {
                     "leitura": "Sim" if caminho_path.exists() else "Não",
                     "escrita": "Sim" if os.access(caminho, os.W_OK) else "Não",
