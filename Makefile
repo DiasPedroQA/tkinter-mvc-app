@@ -4,7 +4,7 @@ SHELL := /bin/bash
 .PHONY: help install run test coverage lint clean all
 
 # Variáveis
-VENV_PATH = venv
+VENV_PATH = .venv
 PYTHON = $(VENV_PATH)/bin/python
 PIP = $(VENV_PATH)/bin/pip
 PRE_COMMIT = $(VENV_PATH)/bin/pre-commit
@@ -25,7 +25,7 @@ install: ## Cria o ambiente virtual e instala as dependências
 	@echo ""
 	@echo "🔧 Verificando/criando ambiente virtual..."
 	@if [ ! -d "$(VENV_PATH)" ]; then \
-		python3 -m venv $(VENV_PATH); \
+		python3 -m .venv $(VENV_PATH); \
 	fi
 	@echo "📦 Instalando dependências..."
 	@$(PIP) install --upgrade pip

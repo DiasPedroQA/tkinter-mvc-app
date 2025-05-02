@@ -34,14 +34,6 @@ jobs:
       - name: 📊 Gerar arquivo de cobertura (coverage.xml)
         run: coverage xml
 
-      - name: 📤 Upload de cobertura para Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
-          flags: unittests
-          name: python-ci
-
       - name: 🔍 Checagem de estilo com flake8 (não falha build)
         run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         continue-on-error: true
