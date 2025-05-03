@@ -8,7 +8,7 @@ Módulo de testes para a classe AnaliseDeCaminho.
 from pathlib import Path
 import pytest
 
-from app.backend.tools.app_ferramentas import AnaliseDeCaminho
+from aplicativo.backend.tools.dados_servidor import AnaliseDeCaminho
 
 
 @pytest.fixture
@@ -74,6 +74,6 @@ def test_dados_localizacao(caminho_teste: Path) -> None:
 def test_execucao_geral(caminho_teste: Path) -> None:
     """Testa a execução completa da análise e o retorno em JSON."""
     analise = AnaliseDeCaminho(str(caminho_teste))
-    resultado_json = analise.executar()
+    resultado_json = analise.montar_objeto_caminho()
     assert isinstance(resultado_json, str)
     assert "caminho_original" in resultado_json

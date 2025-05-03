@@ -3,7 +3,7 @@
 """Testes para a estrutura de dados e representação da análise do sistema."""
 
 import json
-from app.backend.tools.resultado import ResultadoAnalise
+from aplicativo.backend.tools.resultado import ResultadoAnalise
 
 
 def test_resultadoanalise_initialization() -> None:

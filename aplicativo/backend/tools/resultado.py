@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # resultado.py
 
 """
@@ -6,7 +8,7 @@ Define a estrutura de dados para representar o resultado de uma análise de sist
 
 import json
 from dataclasses import dataclass, field, asdict
-from typing import Optional, Dict
+from typing import Optional
 
 
 @dataclass
@@ -35,11 +37,11 @@ class ResultadoAnalise:
     sistema_local: Optional[str] = None
     sistemas_iguais: Optional[str] = None
     mensagem_existencia: Optional[str] = None
-    permissoes: Dict[str, str] = field(default_factory=dict)
-    timestamps: Dict[str, str] = field(default_factory=dict)
+    permissoes: dict[str, str] = field(default_factory=dict)
+    timestamps: dict[str, str] = field(default_factory=dict)
     erros: Optional[str] = None
     sintaxe_permitida: Optional[str] = None
-    localizacao: Dict[str, str] = field(default_factory=dict)
+    localizacao: dict[str, str] = field(default_factory=dict)
 
     def to_json(self) -> str:
         """
