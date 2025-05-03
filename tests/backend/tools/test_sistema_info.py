@@ -2,7 +2,7 @@
 
 """Classe auxiliar para obter o sistema operacional e regras de validação"""
 
-from aplicativo.backend.tools.sistema_info import SistemaArquivoInfo
+from aplicativo.backend.tools.dados_servidor import SistemaArquivoInfo
 
 
 def test_detectar_sistema_windows() -> None:

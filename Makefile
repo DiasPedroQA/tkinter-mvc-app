@@ -36,11 +36,11 @@ install: ## Cria o ambiente virtual e instala as dependências
 run: ## Executa a aplicação principal
 	@echo ""
 	@echo "🚀 Executando app..."
-	@if [ ! -f "app/main.py" ]; then \
-		echo "❌ Erro: app/main.py não encontrado."; \
+	@if [ ! -f "main.py" ]; then \
+		echo "❌ Erro: main.py não encontrado."; \
 		exit 1; \
 	fi
-	@$(PYTHON) app/main.py
+	@$(PYTHON) main.py
 	@echo "✅ App finalizado."
 
 # Rodar apenas testes unitários
