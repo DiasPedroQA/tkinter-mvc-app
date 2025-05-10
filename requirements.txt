@@ -26,8 +26,6 @@ identify==2.6.10
     # via pre-commit
 idna==3.10
     # via requests
-ipython==9.2.0
-    # via tkinter-mvc-app (pyproject.toml)
 isort==5.13.2
     # via tkinter-mvc-app (pyproject.toml)
 jedi==0.19.2
