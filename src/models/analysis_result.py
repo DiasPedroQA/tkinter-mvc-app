@@ -15,6 +15,8 @@ Atributos:
 Métodos:
 - adicionar_mensagem: Adiciona uma mensagem ao resultado.
 - foi_corrigido: Verifica se o caminho foi corrigido.
+- possui_objetos_coletados: Verifica se há objetos associados ao caminho.
+- resumo: Retorna um resumo simplificado do resultado da análise.
 """
 
 from dataclasses import dataclass
@@ -52,7 +54,26 @@ class ResultadoAnalise:
         Returns:
             bool: True se o caminho foi corrigido, False caso contrário.
         """
-        return self.caminho_corrigido is not None
+        return True if self.caminho_corrigido is not None else False
+
+    def possui_objetos_coletados(self) -> bool:
+        """
+        Verifica se há objetos associados ao caminho.
+
+        Returns:
+            bool: True se há objetos coletados, False caso contrário.
+        """
+        return self.objetos_coletados is not None
+
+    def resumo(self) -> str:
+        """
+        Retorna um resumo simplificado do resultado da análise.
+
+        Returns:
+            str: Resumo contendo o status, caminho tratado e mensagem.
+        """
+        status = "Sucesso" if self.sucesso else "Falha"
+        return f"[{status}] {self.caminho_tratado} - {self.mensagem}"
 
     def __str__(self) -> str:
         """
@@ -65,28 +86,39 @@ class ResultadoAnalise:
         corrigido = (
             f", Corrigido: {self.caminho_corrigido}" if self.caminho_corrigido else ""
         )
+        objetos = (
+            f", Objetos Coletados: {self.objetos_coletados}"
+            if self.objetos_coletados
+            else ""
+        )
         return (
             f"ResultadoAnalise(Status: {status}, Mensagem: '{self.mensagem}', "
-            f"Caminho Tratado: '{self.caminho_tratado}', Tipo: '{self.tipo_caminho}'{corrigido})"
+            f"Caminho Tratado: '{self.caminho_tratado}', Tipo: '{self.tipo_caminho}'"
+            f"{corrigido}{objetos})"
         )
 
 
-# Criando um resultado de análise
-resultado = ResultadoAnalise(
-    sucesso=True,
-    mensagem="Análise concluída com sucesso.",
-    caminho_tratado="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html",
-    tipo_caminho="absoluto",
-    objetos_coletados=ObjetoArquivo(
-        caminho_arquivo="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
-    ),
-)
+# Exemplo de uso
+if __name__ == "__main__":
+    # Criando um resultado de análise
+    resultado = ResultadoAnalise(
+        sucesso=True,
+        mensagem="",
+        caminho_tratado="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html",
+        tipo_caminho="absoluto",
+        objetos_coletados=ObjetoArquivo(
+            caminho_arquivo="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
+        ),
+    )
 
-# Adicionando uma mensagem
-resultado.adicionar_mensagem("Arquivo identificado como válido.")
+    # Adicionando uma mensagem
+    resultado.adicionar_mensagem("Arquivo identificado como válido.")
 
-# Verificando se o caminho foi corrigido
-print(resultado.foi_corrigido())  # False
+    # Verificando se o caminho foi corrigido
+    print("Caminho foi modificado?", resultado.foi_corrigido())  # False
 
-# Exibindo o resultado
-print(resultado)
+    # Exibindo o resumo
+    print("Resumo: ", resultado.resumo())
+
+    # Exibindo o resultado completo
+    print("Resultado: ", resultado)
