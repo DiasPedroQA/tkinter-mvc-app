@@ -1,3 +1,5 @@
+# pylint: disable=R0902
+
 """
 Módulo que define as classes ObjetoArquivo e ObjetoPasta.
 
@@ -45,11 +47,13 @@ class ObjetoArquivo:
     @property
     def tamanho_formatado(self) -> str:
         """Retorna o tamanho do arquivo formatado."""
-        tamanho = self.tamanho_bytes
-        for unidade in ["B", "KB", "MB", "GB"]:
+        tamanho = float(self.tamanho_bytes)
+        for unidade in ["B", "KB", "MB", "GB", "TB"]:
             if tamanho < 1024:
                 return f"{tamanho:.2f} {unidade}"
             tamanho /= 1024
+        # return f"{tamanho:.2f} PB"  # Default case for extremely large sizes
+        return f"{tamanho:.2f} TB"  # Default case for very large files
 
     @property
     def permissoes_legiveis(self) -> str:
@@ -87,12 +91,21 @@ class ObjetoPasta:
 
     @property
     def tamanho_total_formatado(self) -> str:
-        """Retorna o tamanho total da pasta formatado."""
-        tamanho = self.tamanho_total_bytes
-        for unidade in ["B", "KB", "MB", "GB"]:
+        """
+        Retorna o tamanho total da pasta formatado em uma unidade legível.
+
+        O tamanho é convertido para a unidade mais apropriada (B, KB, MB, GB, TB, PB),
+        dependendo do valor de `tamanho_total_bytes`.
+
+        Returns:
+            str: O tamanho total formatado, incluindo a unidade.
+        """
+        tamanho = float(self.tamanho_total_bytes)
+        for unidade in ["B", "KB", "MB", "GB", "TB"]:
             if tamanho < 1024:
                 return f"{tamanho:.2f} {unidade}"
             tamanho /= 1024
+        return f"{tamanho:.2f} PB"  # Caso padrão para tamanhos extremamente grandes
 
     @property
     def ultima_modificacao_formatada(self) -> str:
