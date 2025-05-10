@@ -9,30 +9,69 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10, 3.11]  # Testar em múltiplas versões do Python
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run linting
+        run: |
+          pip install flake8
+          flake8 src tests
+
       - name: Run tests
         run: |
-          pytest tests
+          pytest tests --disable-warnings
 
-      - name: Deploy
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test  # Só executa se o job anterior passar
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'  # Apenas em pushes para a branch main
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
         run: |
-          echo "Deploying application..."
-          # Add your deployment commands here
-          # e.g., scp, rsync, or any other deployment tool you use
-          echo "Deployment completed!"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # - name: Deploy application
+      #   env:
+      #     DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+      #     DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      #     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      #   run: |
+      #     echo "Deploying application..."
+      #     ssh -i $DEPLOY_KEY $DEPLOY_USER@$DEPLOY_SERVER "mkdir -p /var/www/tkinter-mvc-app"
+      #     rsync -avz --exclude '.git' ./ $DEPLOY_USER@$DEPLOY_SERVER:/var/www/tkinter-mvc-app
+      #     echo "Deployment completed!"
