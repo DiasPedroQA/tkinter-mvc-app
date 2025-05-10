@@ -186,3 +186,4 @@ cython_debug/
 *.db
 .logs_makefile/app.log
 .logs_makefile/
+old/*
