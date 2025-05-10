@@ -1,50 +1,79 @@
-# Tkinter MVC App
+# Tkinter MVC App - Aplicação gráfica em Python utilizando o padrão MVC
 
-Esse projeto é uma aplicação gráfica em Python utilizando **Tkinter**, estruturada no padrão **MVC** (Model-View-Controller). A ideia é manter uma separação clara entre o **backend** e o **frontend**, com foco na organização e fácil manutenção.
-
-O desenvolvimento foi feito com **TDD (Test-Driven Development)**, usando `pytest` para garantir que o código esteja sempre funcionando como esperado.
+Esse projeto é uma aplicação gráfica em Python utilizando **Tkinter**, estruturada no padrão **MVC** (Model-View-Controller). A aplicação permite a interação com o usuário para análise e conversão de arquivos, com a separação clara entre o **backend** (lógica de negócio) e o **frontend** (interface gráfica), garantindo fácil manutenção e escalabilidade.
 
 ---
 
 ## 🛠 Estrutura do Projeto
 
+A estrutura do projeto está organizada da seguinte forma:
+
 ```bash
 tkinter-mvc-app/
-├── ├── .github/
-│   │   └── workflows/
-│   │       └── python-app.yml
-│   ├── .venv/
-│   ├── .vscode/
-│   ├── app/
-│   │   ├── backend/
-│   │   │   ├── controller/
-│   │   │   │   └── app_controller.py
-│   │   │   ├── logs/
-│   │   │   │   └── app_logs.py
-│   │   │   ├── model/
-│   │   │   │   └── app_model.py
-│   │   │   └── tools/
-│   │   │       └── app_tools.py
-│   │   ├── frontend/
-│   │   └── main.py
-│   ├── htmlcov/
-│   ├── tests/
-│   │   ├── backend/
-│   │   │   ├── controller/
-│   │   │   ├── logs/
-│   │   │   ├── model/
-│   │   │   └── tools/
-│   │   ├── frontend/
-│   ├── .coverage
-│   ├── .editorconfig
-│   ├── .gitignore
-│   ├── .pre-commit-config.yaml
-│   ├── LICENSE
-│   ├── Makefile
-│   ├── pyproject.toml
-│   ├── README.md
-│   └── requirements.txt
-```
+├── .github/                 # Configurações de integração contínua (CI)
+├── .logs_makefile           # Logs gerados pelo Makefile
+├── .venv/                   # Ambiente virtual (não versionado)
+├── .vscode/                 # Configurações do VSCode
+├── app/                     # Código principal da aplicação
+│   ├── backend/             # Lógica de backend (controller, model, tools, logs)
+│   │   └── __init__.py      # Inicialização do módulo backend
+│   ├── frontend/            # Interface gráfica (views)
+│   │   └── __init__.py      # Inicialização do módulo frontend
+│   ├── __init__.py          # Inicialização do módulo principal
+├── tests/                   # Testes unitários
+│   ├── backend/             # Testes para o backend
+│   ├── frontend/            # Testes para a interface gráfica
+│   └── __init__.py          # Inicialização dos testes
+├── .coverage                # Relatório de cobertura de testes
+├── .editorconfig            # Configuração para o estilo de código entre editores
+├── .env                     # Arquivo de variáveis de ambiente (não versionado)
+├── .gitignore               # Arquivo que define o que o Git deve ignorar
+├── .pylintrc                # Configuração do Pylint para verificar o estilo do código
+├── LICENSE                  # Licença do projeto
+├── Makefile                 # Facilita execução de comandos
+├── pyproject.toml           # Configuração de ferramentas como Black
+├── README.md                # Documento de explicação do projeto
+└── requirements-dev.txt     # Dependências para desenvolvimento
+````
+
+### Descrição dos Arquivos e Diretórios
+
+* **`.github/`**: Contém as configurações de integração contínua (CI), incluindo workflows do GitHub Actions, que automatizam os testes e outras tarefas.
+
+* **`.logs_makefile`**: Armazena logs gerados pelos comandos do `Makefile`.
+
+* **`.venv/`**: Ambiente virtual, onde todas as dependências do projeto são instaladas. Esse diretório não é versionado no Git.
+
+* **`.vscode/`**: Configurações específicas do VSCode, como preferências de formatação, depuração, etc.
+
+* **`app/`**: Contém a lógica principal da aplicação:
+
+  * **`backend/`**: Lógica do backend, como controllers, models e ferramentas de manipulação.
+  * **`frontend/`**: Código da interface gráfica, incluindo as views que interagem com o usuário.
+  * **`__init__.py`**: Arquivos de inicialização que configuram os pacotes do Python.
+
+* **`tests/`**: Diretório onde estão os testes do projeto:
+
+  * **`backend/`**: Testes para o backend.
+  * **`frontend/`**: Testes para a interface gráfica.
+
+* **`.coverage`**: Relatório de cobertura de testes gerado pelo pytest.
+
+* **`.editorconfig`**: Arquivo que define a formatação e estilo de código a ser seguido, garantindo consistência no código entre diferentes editores de texto.
+
+* **`.env`**: Contém variáveis de ambiente específicas, como chaves de API e configurações sensíveis. Este arquivo não deve ser versionado.
+
+* **`.gitignore`**: Define arquivos e diretórios que não devem ser rastreados pelo Git, como o ambiente virtual `.venv/` e outros arquivos temporários.
+
+* **`.pylintrc`**: Arquivo de configuração para o Pylint, que é utilizado para garantir a qualidade do código, verificando padrões e erros comuns.
+
+* **`LICENSE`**: Arquivo que contém a licença sob a qual o projeto está disponibilizado.
+
+* **`Makefile`**: Facilita a execução de tarefas comuns no projeto, como instalação de dependências, execução de testes e execução da aplicação.
+
+* **`pyproject.toml`**: Arquivo de configuração para ferramentas de formatação e análise de código, como o Black, Flake8 e outros.
+
+* **`requirements-dev.txt`**: Contém as dependências necessárias para o desenvolvimento do projeto, como bibliotecas de teste, ferramentas de linting e formatação de código.
 
 ---
 
@@ -52,86 +81,117 @@ tkinter-mvc-app/
 
 1. **Clone o repositório**
 
-    ```bash
-    git clone https://github.com/seu-usuario/tkinter-mvc-app.git
-    cd tkinter-mvc-app
-    ```
+   ```bash
+   git clone https://github.com/seu-usuario/tkinter-mvc-app.git
+   cd tkinter-mvc-app
+   ```
 
 2. **Crie e ative o ambiente virtual**
 
-    ```bash
-    python -m venv venv
+   É recomendado criar um ambiente virtual para o projeto para manter as dependências isoladas:
 
-    # Ativar no Windows
-    venv\Scripts\activate
+   ```bash
+   python -m venv venv
+   ```
 
-    # Ativar no Linux/Mac
-    source venv/bin/activate
-    ```
+   * No Windows, ative o ambiente:
+
+   ```bash
+   venv\Scripts\activate
+   ```
+
+   * No Linux/Mac, ative o ambiente:
+
+   ```bash
+   source venv/bin/activate
+   ```
 
 3. **Instale as dependências**
 
-    Para instalar todas as dependências, use o `Makefile`:
+   Para instalar as dependências, você pode usar o `Makefile` ou instalar diretamente com o `pip`:
 
-    ```bash
-    make install
-    ```
+   Usando o `Makefile`:
 
-    Ou, se preferir, instale manualmente:
+   ```bash
+   make install
+   ```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+   Ou manualmente com o `pip`:
+
+   ```bash
+   pip install -r requirements-dev.txt
+   ```
 
 4. **Execute o aplicativo**
 
-    Execute o projeto com:
+   Para rodar o aplicativo, use o comando:
 
-    ```bash
-    make run
-    ```
+   ```bash
+   make run
+   ```
+
+   Ou execute diretamente o script Python:
+
+   ```bash
+   python app/meu_app.py
+   ```
+
+5. **Verifique se está funcionando**
+
+   Após rodar o aplicativo, você verá a interface gráfica sendo carregada. Se tiver problemas, verifique o log de erros no diretório `app/logs/`.
 
 ---
 
 ## 🧪 Rodando os Testes
 
-Para garantir que tudo esteja funcionando, os testes estão configurados com **pytest**.
+Os testes são essenciais para garantir que o código esteja funcionando corretamente. Eles foram escritos utilizando o **pytest**.
 
-Para rodar todos os testes, basta usar o comando:
+Para rodar todos os testes, use o seguinte comando:
 
 ```bash
 make test
 ```
 
-Ou então, execute diretamente com o pytest com coverage junto (cobertura de código):
+Ou execute diretamente com o **pytest** para gerar um relatório de cobertura de código:
 
 ```bash
 pytest --cov=app tests/ --cov-report=html
 ```
 
+Os testes estão organizados em pastas correspondentes às camadas do aplicativo (backend e frontend).
+
 ---
 
 ## 🔄 Integração Contínua (CI)
 
-A integração contínua está configurada para rodar automaticamente sempre que houver um `push` ou `pull request` para o branch `main`. Ela executa os testes com o `pytest` para garantir que não quebrem nada.
+A integração contínua está configurada para rodar automaticamente sempre que houver um `push` ou `pull request` para o branch `main`. Ela executa os testes usando o **pytest** para garantir que tudo esteja funcionando.
 
-O arquivo de workflow está em: `.github/workflows/python-app.yml`.
+O arquivo de workflow do CI pode ser encontrado em: `.github/workflows/python-app.yml`.
 
 ---
 
 ## 🧹 Qualidade de Código
 
-A qualidade do código é garantida com alguns recursos:
+Garantimos a qualidade do código com ferramentas de formatação e verificação de estilo:
 
-- **EditorConfig**: O arquivo `.editorconfig` ajuda a garantir que todos os desenvolvedores sigam o mesmo padrão de formatação de código.
-- **Pre-commit hooks**: Utilizamos o `pre-commit` para rodar o `black` (formatador de código) e o `flake8` (verificador de estilo), garantindo que o código esteja sempre limpo e sem erros.
+* **EditorConfig**: O arquivo `.editorconfig` ajuda a garantir que todos os desenvolvedores sigam o mesmo padrão de formatação de código.
+* **Pre-commit hooks**: Usamos o `pre-commit` para rodar automaticamente o `black` (formatador de código) e o `flake8` (verificador de estilo), garantindo que o código esteja sempre limpo e sem erros.
 
-Para instalar os hooks, é só rodar:
+### Como configurar o pre-commit
 
-```bash
-pip install pre-commit
-pre-commit install
-```
+1. Instale o pre-commit:
+
+   ```bash
+   pip install pre-commit
+   ```
+
+2. Instale os hooks configurados:
+
+   ```bash
+   pre-commit install
+   ```
+
+Agora, sempre que você fizer um commit, o código será automaticamente formatado e verificado.
 
 ---
 
@@ -143,19 +203,13 @@ Este projeto está sob a licença **MIT**. Para mais detalhes, consulte o arquiv
 
 ## 📄 Explicação dos Arquivos de Configuração
 
-Aqui está o propósito de cada um dos arquivos de configuração no projeto:
-
 ### 1. **`.gitignore`**
 
 Esse arquivo define quais arquivos e pastas não devem ser versionados no Git. Ele ignora o diretório do ambiente virtual `venv/`, arquivos temporários e outras pastas que não fazem sentido estarem no repositório.
 
-### 2. **`requirements.txt`**
+### 2. **`requirements-dev.txt`**
 
-Contém todas as dependências do projeto, como `pytest` para testes e outras bibliotecas necessárias. Isso facilita a instalação das dependências com um simples comando:
-
-```bash
-pip install -r requirements.txt
-```
+Contém todas as dependências do projeto necessárias para o desenvolvimento, como `pytest` para testes, ferramentas de linting e formatação de código.
 
 ### 3. **`.editorconfig`**
 
@@ -165,31 +219,12 @@ Esse arquivo ajuda a padronizar a formatação do código entre diferentes edito
 
 Este arquivo é utilizado para configurar o **Black**, o formatador de código. Com ele, a formatação é feita automaticamente sempre que você rodar o `black` no código.
 
-### 5. **`.pre-commit-config.yaml`**
+### 5. **`Makefile`**
 
-Aqui estão configurados os **pre-commit hooks**. Ele garante que o código passe por uma formatação automática com `black` e que não haja problemas de estilo com `flake8` antes de qualquer commit ser feito.
+O `Makefile` facilita a execução de comandos repetitivos, como instalação de dependências (`make install`), rodar o app (`make run`) e rodar os testes (`make test`). Isso ajuda a evitar que você precise lembrar de todos os comandos e torna o fluxo de trabalho mais rápido e eficiente.
 
-### 6. **`Makefile`**
-
-O `Makefile` facilita a execução de comandos repetitivos, como instalar dependências (`make install`), rodar o app (`make run`) e rodar os testes (`make test`). Isso ajuda a evitar que você precise lembrar de todos os comandos e torna o fluxo de trabalho mais rápido e eficiente.
-
-### 7. **`.github/workflows/python-app.yml`**
+### 6. **`.github/workflows/python-app.yml`**
 
 Este arquivo configura o **GitHub Actions**, que é usado para a integração contínua (CI). Sempre que houver um `push` ou `pull request` no branch `main`, ele executa os testes com o `pytest` para garantir que tudo esteja funcionando.
-
----
-
-## 📌 To Do
-
-Aqui estão algumas coisas que ainda podem ser feitas para melhorar o projeto:
-
-- **Criar a primeira tela em Tkinter**: Começar a implementar a interface gráfica usando Tkinter.
-- **Conectar o backend com a view**: Criar a lógica no **controller** para conectar os dados do modelo à interface.
-- **Adicionar mais testes**: Escrever testes para as interações da interface gráfica e validar o comportamento completo da aplicação.
-- **Melhorar a interface**: Adicionar elementos gráficos para tornar a interface mais atraente.
-- **Adicionar tratamento de erros**: Melhorar a forma como a aplicação lida com erros, mostrando mensagens amigáveis ao usuário.
-- **Refinar o fluxo de dados**: Documentar e melhorar a forma como os dados são passados entre **model**, **view** e **controller**.
-- **Configurar logs de execução**: Implementar logs para monitorar o funcionamento do app em produção.
-- **Testar em outros sistemas operacionais**: Garantir que a aplicação funcione bem em diferentes plataformas (Windows, Linux, Mac).
 
 ---

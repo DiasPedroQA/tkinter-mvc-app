@@ -76,6 +76,7 @@ py-version=3.12
 
 [MESSAGES CONTROL]
 
+
 # Only show warnings with the listed confidence levels. Leave empty to show
 # all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED
 # confidence=
@@ -109,6 +110,7 @@ disable=
     # We anticipate #3512 where it will become optional
     fixme,
     cyclic-import,
+    line-too-long,
     import-error,
     consider-using-alias,
     consider-alternative-union-syntax,
@@ -212,7 +214,7 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=120
+max-line-length=100
 
 # Regexp for a line that is allowed to be longer than the limit.
 ignore-long-lines=^\s*(# )?<?https?://\S+>?$
