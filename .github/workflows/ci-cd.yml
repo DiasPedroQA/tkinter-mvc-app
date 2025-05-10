@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9, '3.10', 3.11]  # Testar em múltiplas versões do Python
+        python-version: [3.9, "3.10", 3.11]  # Testar em múltiplas versões do Python
 
     steps:
       - name: Checkout code
@@ -36,6 +36,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest  # Garante que o pytest está instalado
 
       - name: Run linting
         run: |
