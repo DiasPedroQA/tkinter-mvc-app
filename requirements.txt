@@ -2,7 +2,7 @@ asttokens==3.0.0
     # via stack-data
 beautifulsoup4==4.13.4
     # via tkinter-mvc-app (pyproject.toml)
-black==24.10.0
+black==25.1.0
     # via tkinter-mvc-app (pyproject.toml)
 certifi==2025.4.26
     # via requests
