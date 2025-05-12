@@ -1,74 +1,101 @@
-# README for Tkinter MVC App
+# Tkinter MVC App
+
+![CI](https://github.com/DiasPedroQA/tkinter-mvc-app/actions/workflows/ci-cd.yml/badge.svg)
+![Coverage](https://codecov.io/gh/DiasPedroQA/tkinter-mvc-app/branch/main/graph/badge.svg)
 
 ## Overview
 
-This project is a Tkinter-based application structured using the Model-View-Controller (MVC) design pattern. It aims to provide a clear separation of concerns, making the application easier to maintain and extend.
+Tkinter MVC App is a Python desktop application structured with the Model-View-Controller (MVC) design pattern.
+Its goal is to offer a clean architecture for batch file processing and GUI interaction using Tkinter.
+
+## Preview
+
+![Interface Screenshot](docs/screenshot.png) <!-- Altere o caminho ou remova se ainda não tiver a imagem -->
 
 ## Project Structure
-
-The project is organized as follows:
 
 ```plaintext
 tkinter-mvc-app
 ├── src
-│   ├── controllers          # Contains the application controllers
-│   ├── models               # Contains the data models
-│   ├── views                # Contains the user interface views
-│   ├── tools                # Contains utility functions
+│   ├── controllers          # Application controllers
+│   ├── models               # Data models
+│   ├── views                # User interface views
+│   ├── tools                # Utility functions
 │   └── app.py               # Entry point of the application
-├── tests                    # Contains unit tests for the application
-├── .github
-│   └── workflows            # Contains CI/CD pipeline configurations
-├── requirements.txt         # Lists project dependencies
-├── README.md                # Project documentation
-└── setup.py                 # Package configuration
-```
+├── tests                    # Unit tests
+├── .github/workflows        # CI/CD configuration
+├── requirements.txt         # Dependencies
+├── README.md                # Documentation
+├── setup.py                 # Packaging (optional)
+└── Makefile                 # Dev utility commands
+````
 
 ## Installation
 
-To set up the project, follow these steps:
+Clone the repository and install the required dependencies:
 
-1. Clone the repository:
-
-   ```bash
-   git clone <repository-url>
-   cd tkinter-mvc-app
-   ```
-
-2. Install the required dependencies:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+git clone https://github.com/DiasPedroQA/tkinter-mvc-app.git
+cd tkinter-mvc-app
+pip install -r requirements.txt
+```
 
 ## Usage
 
-To run the application, execute the following command:
+To run the application:
 
 ```bash
 python src/app.py
 ```
 
+## Useful Makefile Commands
+
+You can also use the Makefile for common tasks:
+
+```bash
+make install      # Install dependencies
+make test         # Run tests
+make run          # Start the application
+make lint         # Lint with Black, isort, flake8
+make mypy         # Static typing check
+make coverage     # Test coverage report
+make clean        # Remove temp files
+make format       # Auto-format code
+make security     # Run Bandit security check
+make update-deps  # Update Python dependencies
+```
+
 ## Testing
 
-Unit tests are provided for each component of the application. To run the tests, use:
+Run the test suite with:
 
 ```bash
 pytest
 ```
 
+Or via Makefile:
+
+```bash
+make test
+```
+
 ## CI/CD Pipeline
 
-The project includes a CI/CD pipeline defined in `.github/workflows/ci-cd.yml`. This pipeline automates the following processes:
+This project uses GitHub Actions for continuous integration.
+The pipeline (`.github/workflows/ci-cd.yml`) automatically installs dependencies and runs tests on push and pull requests to the `main` branch.
 
-- Installing dependencies
-- Running tests
-- Deploying the application (if applicable)
+Dependabot is also configured to keep GitHub Actions and Python dependencies up to date.
 
 ## Contributing
 
-Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.
+Contributions are welcome! To contribute:
+
+1. Fork this repository
+2. Create a branch: `git checkout -b feature/nova-funcionalidade`
+3. Commit your changes: `git commit -m "feat: nova funcionalidade"`
+4. Push to your fork: `git push origin feature/nova-funcionalidade`
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

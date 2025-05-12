@@ -1,16 +1,31 @@
-name: Greetings
+name: 👋 Greetings
 
-on: [pull_request_target, issues]
+on:
+  pull_request_target:
+  issues:
 
 jobs:
-  greeting:
+  greet-new-contributor:
+    name: 🤖 First Interaction Greeting
     runs-on: ubuntu-latest
+
     permissions:
       issues: write
       pull-requests: write
+
     steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+      - name: 🤝 Send greeting message
+        uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            Obrigado por abrir sua primeira issue! 🎉
+            A equipe vai analisar e responder o mais breve possível.
+            Enquanto isso, confira o README para entender melhor o projeto.
+            🚀 Seja bem-vindo(a)!
+
+          pr-message: |
+            Obrigado por contribuir com seu primeiro PR! 🙌
+            Vamos revisar seu código em breve.
+            Fique à vontade para sugerir melhorias e discutir ideias.
+            👏 Ótimo trabalho até aqui!

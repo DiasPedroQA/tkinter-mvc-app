@@ -1,4 +1,4 @@
-name: Makefile CI
+name: 🧪 Makefile CI for Python
 
 on:
   push:
@@ -7,21 +7,40 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: 🔄 Checkout repo
+        uses: actions/checkout@v4
 
-    - name: configure
-      run: ./configure
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: make
+      - name: 📦 Install dependencies
+        run: make install
 
-    - name: Run check
-      run: make check
+      - name: 🚀 Run pre-commit hooks
+        run: |
+          make pre-commit
+          pre-commit run --all-files
 
-    - name: Run distcheck
-      run: make distcheck
+      - name: ✅ Run tests
+        run: make test
+
+      - name: 🧹 Lint code
+        run: make lint
+
+      - name: 🔍 Static typing
+        run: make mypy
+
+      - name: 🔒 Security check
+        run: make security
+
+      - name: 🧪 Generate coverage report
+        run: make coverage
+
+      - name: 🧼 Clean up
+        run: make clean
