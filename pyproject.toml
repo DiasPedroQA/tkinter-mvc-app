@@ -53,7 +53,7 @@ dependencies = [
   # Shell interativo avançado
   "ipython>=8.22,<9.0",
   # Ferramenta para automação de ganchos de pré-commit
-  "pre-commit>=3.6,<4.0",
+  "pre-commit>=3.6,<5.0",
   # Framework de testes e cobertura de código
   "pytest>=8.1,<9.0",
   "pytest-cov>=4.1,<5.0",
