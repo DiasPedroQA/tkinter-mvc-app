@@ -21,7 +21,3 @@ repos:
     rev: v1.15.0
     hooks:
       - id: mypy
-  # - repo: https://github.com/pappasam/toml-sort
-  #   rev: v0.24.2  # Substitua pela versão válida
-  #   hooks:
-  #     - id: toml-sort
