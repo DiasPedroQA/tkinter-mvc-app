@@ -51,7 +51,7 @@ dependencies = [
   "flake8>=7.0,<8.0",
   "mypy>=1.8,<2.0",
   # Shell interativo avançado
-  "ipython>=8.22,<9.0",
+  "ipython>=8.22,<10.0",
   # Ferramenta para automação de ganchos de pré-commit
   "pre-commit>=3.6,<5.0",
   # Framework de testes e cobertura de código
