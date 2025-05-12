@@ -12,6 +12,7 @@ permissions:
   contents: read
 
 jobs:
+  # Job para build, linting e testes
   build-and-test:
     name: 🧪 Build, Lint and Test (Python Matrix)
     runs-on: ubuntu-latest
@@ -72,6 +73,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+  # Job para verificação de qualidade com Pylint
   pylint-check:
     name: 🧹 Pylint (Multi-Python)
     runs-on: ubuntu-latest
@@ -94,6 +96,7 @@ jobs:
       - name: 🔎 Run Pylint
         run: pylint $(git ls-files '*.py')
 
+  # Job para construir pacotes de release
   release-build:
     name: 📦 Build Release Package
     if: github.event_name == 'release' && github.event.action == 'published'
@@ -116,6 +119,7 @@ jobs:
           name: release-dists
           path: dist/
 
+  # Job para publicação no PyPI
   pypi-publish:
     name: 🚀 Publish to PyPI
     runs-on: ubuntu-latest
@@ -123,10 +127,6 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     permissions:
       id-token: write
-
-    # environment:
-    #   name: venv
-    #   # url: https://pypi.org/project/SEU_PROJETO_AQUI
 
     steps:
       - name: 📥 Download artifacts
@@ -140,6 +140,7 @@ jobs:
         with:
           packages-dir: dist/
 
+  # Job para realizar o deploy no servidor
   deploy:
     name: 🚀 Deploy to Server
     runs-on: ubuntu-latest
