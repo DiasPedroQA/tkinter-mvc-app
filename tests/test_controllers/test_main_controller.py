@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # from unittest import TestCase
 # from src.controllers.main_controller import MainController
 # from src.models.data_model import DataModel

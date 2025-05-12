@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # from tkinter import Tk
 # from unittest import TestCase
 # from src.views.main_view import MainView

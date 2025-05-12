@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # """
 # Código para testar o servidor de arquivos.
 # """

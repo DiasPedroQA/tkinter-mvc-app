@@ -19,7 +19,6 @@ build-backend = "setuptools.build_meta"
 
 # Files or directories to be skipped. They should be base names, not
 # paths.
-ignore=CVS
 
 # Add files or directories matching the regex patterns to the ignore-list. The
 # regex matches against paths and can be in Posix or Windows format.
@@ -65,7 +64,7 @@ unsafe-load-any-extension=no
 extension-pkg-allow-list=
 
 # Minimum supported python version
-py-version = 3.7.2
+py-version = 3.11
 
 # Control the amount of potential inferred values when inferring a single
 # object. This can help the performance when dealing with large functions or
@@ -82,7 +81,9 @@ fail-on=
 
 
 [MASTER]
-py-version=3.12
+py-version=3.11
+ignore-patterns=__init__.py
+ignore=pyproject.toml
 
 [MESSAGES CONTROL]
 
@@ -111,7 +112,7 @@ enable=
 
 disable=
     attribute-defined-outside-init,
-    invalid-name,
+    # attribute-defined-outside-init,
     missing-docstring,
     protected-access,
     too-few-public-methods,
@@ -120,10 +121,14 @@ disable=
     # We anticipate #3512 where it will become optional
     fixme,
     cyclic-import,
-    line-too-long,
+    # line-too-long,
     import-error,
     consider-using-alias,
     consider-alternative-union-syntax,
+    no-value-for-parameter,
+    E0015,
+    E1120,
+    W0621,
 
 
 [REPORTS]
@@ -131,7 +136,7 @@ disable=
 # Set the output format. Available formats are text, parseable, colorized, msvs
 # (visual studio) and html. You can also give a reporter class, eg
 # mypackage.mymodule.MyReporterClass.
-output-format=text
+output-format=parseable
 
 # Tells whether to display a full report or only the messages
 reports=no
@@ -196,7 +201,7 @@ init-import=no
 
 # A regular expression matching the name of dummy variables (i.e. expectedly
 # not used).
-dummy-variables-rgx=_$|dummy
+dummy-variables-rgx=_$|dummy|_var
 
 # List of additional names supposed to be defined in builtins. Remember that
 # you should avoid defining new builtins when possible.
@@ -224,7 +229,7 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=100
+max-line-length=120
 
 # Regexp for a line that is allowed to be longer than the limit.
 ignore-long-lines=^\s*(# )?<?https?://\S+>?$
@@ -528,7 +533,7 @@ known-standard-library=
 known-third-party=enchant
 
 # Couples of modules and preferred modules, separated by a comma.
-preferred-modules=
+preferred-modules=json:orjson,collections.OrderedDict:dict
 
 
 [EXCEPTIONS]
@@ -552,7 +557,9 @@ runtime-typing = no
 [DEPRECATED_BUILTINS]
 
 # List of builtins function names that should not be used, separated by a comma
-bad-functions=map,input
+# `map` is discouraged because list comprehensions are often more readable.
+# `input` is discouraged because it can lead to security issues if not handled properly.
+bad-functions=
 
 
 [REFACTORING]
@@ -569,13 +576,13 @@ never-returning-functions=sys.exit,argparse.parse_error
 
 [STRING]
 
-# This flag controls whether inconsistent-quotes generates a warning when the
+check-quote-consistency=yes
 # character used as a quote delimiter is used inconsistently within a module.
 check-quote-consistency=no
 
 # This flag controls whether the implicit-str-concat should generate a warning
 # on implicit string concatenation in sequences defined over several lines.
-check-str-concat-over-line-jumps=no
+check-str-concat-over-line-jumps=yes
 
 
 [CODE_STYLE]

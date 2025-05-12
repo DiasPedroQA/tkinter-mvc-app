@@ -1,39 +1,42 @@
-'''
+# -*- coding: utf-8 -*-
+
+"""
 Modelos para representar arquivos, pastas e caminhos do sistema.
-'''
+"""
 
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import List
+from dataclasses import dataclass, field  # noqa: E402
+from typing import Any
 
-import sys
-
-# Adiciona a pasta 'src/' ao sys.path
-sys.path.append(str(Path(__file__).resolve().parent / 'src'))
-
-from tools.datetime_utils import GerenciadorDeDataHora
-from tools.path_operations import GerenciadorDeCaminho
+# from src.tools.path_operations import GerenciadorDeCaminhos  # noqa: E402
 
 
 @dataclass
 class ObjetoCaminho:
     caminho: str
     tipo_item: str
-    ultima_modificacao: float = 0.0
-    data_acesso: float = 0.0
-    data_criacao: float = 0.0
+    ultima_modificacao: str = ""
+    data_acesso: str = ""
+    data_criacao: str = ""
 
-    @property
-    def ultima_modificacao_formatada(self) -> str:
-        return GerenciadorDeDataHora.timestamp_para_str(self.ultima_modificacao)
+    @classmethod
+    def from_dict(cls, geral: dict[str, Any], datas: dict[str, Any]) -> "ObjetoCaminho":
+        """
+        Cria uma instância de ObjetoCaminho a partir de dicionários de dados.
 
-    @property
-    def data_acesso_formatada(self) -> str:
-        return GerenciadorDeDataHora.timestamp_para_str(self.data_acesso)
+        Args:
+            geral: Dicionário com informações gerais do caminho.
+            datas: Dicionário com informações de datas.
 
-    @property
-    def data_criacao_formatada(self) -> str:
-        return GerenciadorDeDataHora.timestamp_para_str(self.data_criacao)
+        Returns:
+            ObjetoCaminho: Instância inicializada.
+        """
+        return cls(
+            caminho=geral.get("caminho_corrigido", ""),
+            tipo_item=geral.get("tipo_caminho", ""),
+            ultima_modificacao=datas.get("data_modificacao", ""),
+            data_acesso=datas.get("data_acesso", ""),
+            data_criacao=datas.get("data_criacao", ""),
+        )
 
 
 @dataclass
@@ -43,107 +46,107 @@ class ObjetoArquivo(ObjetoCaminho):
     permissoes: str = ""
 
     @classmethod
-    def from_path(cls, path: Path):
-        info = GerenciadorDeCaminho.obter_info_arquivo(path)
+    def from_dict(
+        cls, geral: dict[str, Any], datas: dict[str, Any], **kwargs: dict[str, Any]
+    ) -> "ObjetoArquivo":
+        arquivo = kwargs.get("arquivo", {})
+        caminho_objeto = super().from_dict(geral, datas)
         return cls(
-            caminho=str(path),
-            tipo_item="Arquivo",
-            extensao=info.extensao,
-            tamanho_bytes=info.tamanho,
-            ultima_modificacao=info.modificacao,
-            data_acesso=info.acesso,
-            data_criacao=info.criacao,
-            permissoes=info.permissoes,
+            caminho=caminho_objeto.caminho,
+            tipo_item=caminho_objeto.tipo_item,
+            ultima_modificacao=caminho_objeto.ultima_modificacao,
+            data_acesso=caminho_objeto.data_acesso,
+            data_criacao=caminho_objeto.data_criacao,
+            extensao=arquivo.get("extensao", ""),
+            tamanho_bytes=arquivo.get("tamanho_bytes", 0),
+            permissoes=arquivo.get("permissoes", ""),
         )
-
-    def atualizar_dados(self):
-        atualizado = self.from_path(Path(self.caminho))
-        self.__dict__.update(atualizado.__dict__)
-
-    @property
-    def tamanho_formatado(self) -> str:
-        return GerenciadorDeCaminho.formatar_tamanho(self.tamanho_bytes)
-
-    def eh_arquivo_grande(self, limite_mb: int = 100) -> bool:
-        return self.tamanho_bytes > limite_mb * 1024 * 1024
-
-    def eh_recente(self, dias: int = 7) -> bool:
-        return GerenciadorDeDataHora.eh_recente(self.ultima_modificacao, dias)
-
-    def exibir_detalhes(self) -> dict:
-        return {
-            "caminho": self.caminho,
-            "tipo_item": self.tipo_item,
-            "extensao": self.extensao,
-            "tamanho_bytes": self.tamanho_bytes,
-            "tamanho_formatado": self.tamanho_formatado,
-            "permissoes": self.permissoes,
-            "ultima_modificacao": self.ultima_modificacao_formatada,
-            "data_acesso": self.data_acesso_formatada,
-            "data_criacao": self.data_criacao_formatada,
-        }
 
 
 @dataclass
 class ObjetoPasta(ObjetoCaminho):
-    subitens: List[str] = field(default_factory=list)
+    subitens: list[str] = field(default_factory=list)
     tamanho_total_bytes: int = 0
+    permissoes: str = ""
 
     @classmethod
-    def from_path(cls, path: Path):
-        info = GerenciadorDeCaminho.obter_info_pasta(path)
+    def from_dict(
+        cls, geral: dict[str, Any], datas: dict[str, Any], **kwargs: dict[str, Any]
+    ) -> "ObjetoPasta":
+        pasta = kwargs.get("pasta", {})
+        caminho_objeto = super().from_dict(geral, datas)
         return cls(
-            caminho=str(path),
-            tipo_item="Pasta",
-            subitens=info.subitens,
-            tamanho_total_bytes=info.tamanho,
-            ultima_modificacao=info.modificacao,
-            data_acesso=info.acesso,
-            data_criacao=info.criacao,
+            caminho=caminho_objeto.caminho,
+            tipo_item=caminho_objeto.tipo_item,
+            ultima_modificacao=caminho_objeto.ultima_modificacao,
+            data_acesso=caminho_objeto.data_acesso,
+            data_criacao=caminho_objeto.data_criacao,
+            subitens=pasta.get("subitens", []),
+            tamanho_total_bytes=pasta.get("tamanho_total_bytes", 0),
+            permissoes=pasta.get("permissoes", ""),
         )
-
-    def atualizar_dados(self):
-        atualizado = self.from_path(Path(self.caminho))
-        self.__dict__.update(atualizado.__dict__)
-
-    @property
-    def tamanho_total_formatado(self) -> str:
-        return GerenciadorDeCaminho.formatar_tamanho(self.tamanho_total_bytes)
-
-    @property
-    def quantidade_subitens(self) -> int:
-        return len(self.subitens)
-
-    def esta_vazia(self) -> bool:
-        return not self.subitens
-
-    def contem_arquivos_com_extensao(self, extensao: str) -> List[str]:
-        return [item for item in self.subitens if item.endswith(extensao)]
-
-    def exibir_detalhes(self) -> dict:
-        return {
-            "caminho": self.caminho,
-            "tipo_item": self.tipo_item,
-            "quantidade_subitens": self.quantidade_subitens,
-            "tamanho_total_bytes": self.tamanho_total_bytes,
-            "tamanho_total_formatado": self.tamanho_total_formatado,
-            "ultima_modificacao": self.ultima_modificacao_formatada,
-            "data_acesso": self.data_acesso_formatada,
-            "data_criacao": self.data_criacao_formatada,
-        }
 
 
 if __name__ == "__main__":
-    # Caminhos
-    caminho_arquivo = Path("/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html")
-    caminho_pasta = Path("/home/pedro-pm-dias/Downloads/")
+    # Exemplo de dados simulados
+    dados_arquivo: dict[str, Any] = {
+        "geral": {
+            "caminho_original": "~/Downloads/Firefox/bookmarks.html",
+            "caminho_corrigido": "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html",
+            "tipo_caminho": "Arquivo",
+            "nome_item": "bookmarks.html",
+            "diretorio_pai_caminho": "/home/pedro-pm-dias/Downloads/Firefox",
+            "caminho_absoluto": True,
+            "caminho_existe": True,
+            "caminho_foi_corrigido": False,
+        },
+        "datas": {
+            "data_modificacao": "07/05/2025 16:17:35",
+            "data_acesso": "10/05/2025 06:35:32",
+            "data_criacao": "07/05/2025 16:17:35",
+        },
+        "arquivo": {
+            "extensao": ".html",
+            "tamanho_bytes": 732677,
+            "tamanho_formatado": "715.50 KB",
+            "permissoes": "rw-r--r-- pedro-pm-dias:pedro-pm-dias",
+        },
+    }
+
+    dados_pasta: dict[str, Any] = {
+        "geral": {
+            "caminho_original": "~/Downloads/",
+            "caminho_corrigido": "/home/pedro-pm-dias/Downloads",
+            "tipo_caminho": "Pasta",
+            "nome_item": "Downloads",
+            "diretorio_pai_caminho": "/home/pedro-pm-dias",
+            "caminho_absoluto": True,
+            "caminho_existe": True,
+            "caminho_foi_corrigido": False,
+        },
+        "datas": {
+            "data_modificacao": "11/05/2025 02:56:52",
+            "data_acesso": "11/05/2025 02:57:35",
+            "data_criacao": "11/05/2025 02:56:52",
+        },
+        "pasta": {
+            "quantidade_itens": 110,
+            "tamanho_total_bytes": 11942036209,
+            "tamanho_total_formatado": "11.12 GB",
+            "permissoes": "rwxr-xr-x pedro-pm-dias:pedro-pm-dias",
+        },
+    }
 
     # Criando o objeto de arquivo
-    arquivo = ObjetoArquivo.from_path(caminho_arquivo)
-    print("=== Detalhes do Arquivo ===")
-    print(arquivo.exibir_detalhes())
+    arquivo = ObjetoArquivo.from_dict(
+        geral=dados_arquivo["geral"], datas=dados_arquivo["datas"], arquivo=dados_arquivo["arquivo"]
+    )
+    print("\n=== Detalhes do Arquivo ===")
+    print(arquivo)
 
     # Criando o objeto de pasta
-    pasta = ObjetoPasta.from_path(caminho_pasta)
+    pasta = ObjetoPasta.from_dict(
+        geral=dados_pasta["geral"], datas=dados_pasta["datas"], pasta=dados_pasta["pasta"]
+    )
     print("\n=== Detalhes da Pasta ===")
-    print(pasta.exibir_detalhes())
+    print(pasta)

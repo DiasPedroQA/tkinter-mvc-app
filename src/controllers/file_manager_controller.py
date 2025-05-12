@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # """
 # Módulo que define a classe GerenciadorArquivos.
 
@@ -66,33 +68,34 @@
 #         return objeto_analisado
 # src/controllers/file_manager_controller.py
 
-from src.models.paths_objects import ObjetoArquivo, ObjetoPasta
-from pathlib import Path
+# from pathlib import Path
+
+# from src.models.paths_objects import ObjetoArquivo, ObjetoPasta
 
 
-class FileManagerController:
-    """Controlador responsável por criar, atualizar e fornecer objetos de arquivos ou pastas."""
+# class FileManagerController:
+#     """Controlador responsável por criar, atualizar e fornecer objetos de arquivos ou pastas."""
 
-    def criar_objeto(self, caminho: str):
-        """Cria e retorna o objeto correspondente ao caminho (arquivo ou pasta)."""
-        path = Path(caminho)
+#     def criar_objeto(self, caminho: str):
+#         """Cria e retorna o objeto correspondente ao caminho (arquivo ou pasta)."""
+#         path = Path(caminho)
 
-        if path.is_file():
-            return ObjetoArquivo.from_path(path)
-        elif path.is_dir():
-            return ObjetoPasta.from_path(path)
-        else:
-            raise FileNotFoundError(f"Caminho inválido: {caminho}")
+#         if path.is_file():
+#             return ObjetoArquivo.from_path(path)
+#         elif path.is_dir():
+#             return ObjetoPasta.from_path(path)
+#         else:
+#             raise FileNotFoundError(f"Caminho inválido: {caminho}")
 
-    def atualizar_objeto(self, obj):
-        """Atualiza os dados do objeto fornecido, seja arquivo ou pasta."""
-        if isinstance(obj, ObjetoArquivo):
-            obj.atualizar_dados()
-        elif isinstance(obj, ObjetoPasta):
-            obj.atualizar_dados()
-        else:
-            raise TypeError("Tipo de objeto não reconhecido.")
+#     def atualizar_objeto(self, obj):
+#         """Atualiza os dados do objeto fornecido, seja arquivo ou pasta."""
+#         if isinstance(obj, ObjetoArquivo):
+#             obj.atualizar_dados()
+#         elif isinstance(obj, ObjetoPasta):
+#             obj.atualizar_dados()
+#         else:
+#             raise TypeError("Tipo de objeto não reconhecido.")
 
-    def ler_objeto_formatado(self, obj):
-        """Retorna um dicionário com os dados formatados de um ObjetoArquivo ou ObjetoPasta."""
-        return obj.to_dict()
+#     def ler_objeto_formatado(self, obj):
+#         """Retorna um dicionário com os dados formatados de um ObjetoArquivo ou ObjetoPasta."""
+#         return obj.to_dict()

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Módulo que define a classe ResultadoAnalise.
 
@@ -21,6 +23,7 @@ Métodos:
 
 from dataclasses import dataclass
 from typing import Optional, Union
+
 from src.models.paths_objects import ObjetoArquivo, ObjetoPasta
 
 
@@ -83,14 +86,8 @@ class ResultadoAnalise:
             str: Representação textual do resultado.
         """
         status = "Sucesso" if self.sucesso else "Falha"
-        corrigido = (
-            f", Corrigido: {self.caminho_corrigido}" if self.caminho_corrigido else ""
-        )
-        objetos = (
-            f", Objetos Coletados: {self.objetos_coletados}"
-            if self.objetos_coletados
-            else ""
-        )
+        corrigido = f", Corrigido: {self.caminho_corrigido}" if self.caminho_corrigido else ""
+        objetos = f", Objetos Coletados: {self.objetos_coletados}" if self.objetos_coletados else ""
         return (
             f"ResultadoAnalise(Status: {status}, Mensagem: '{self.mensagem}', "
             f"Caminho Tratado: '{self.caminho_tratado}', Tipo: '{self.tipo_caminho}'"
@@ -98,27 +95,25 @@ class ResultadoAnalise:
         )
 
 
-# Exemplo de uso
-if __name__ == "__main__":
-    # Criando um resultado de análise
-    resultado = ResultadoAnalise(
-        sucesso=True,
-        mensagem="",
-        caminho_tratado="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html",
-        tipo_caminho="absoluto",
-        objetos_coletados=ObjetoArquivo(
-            caminho_arquivo="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
-        ),
-    )
+# # Exemplo de uso
+# if __name__ == "__main__":
+#     # Criando um resultado de análise
+#     resultado = ResultadoAnalise(
+#         sucesso=True,
+#         mensagem="",
+#         caminho_tratado="/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html",
+#         tipo_caminho="absoluto",
+#         objetos_coletados=ObjetoArquivo(),
+#     )
 
-    # Adicionando uma mensagem
-    resultado.adicionar_mensagem("Arquivo identificado como válido.")
+#     # Adicionando uma mensagem
+#     resultado.adicionar_mensagem("Arquivo identificado como válido.")
 
-    # Verificando se o caminho foi corrigido
-    print("Caminho foi modificado?", resultado.foi_corrigido())  # False
+#     # Verificando se o caminho foi corrigido
+#     print("Caminho foi modificado?", resultado.foi_corrigido())  # False
 
-    # Exibindo o resumo
-    print("Resumo: ", resultado.resumo())
+#     # Exibindo o resumo
+#     print("Resumo: ", resultado.resumo())
 
-    # Exibindo o resultado completo
-    print("Resultado: ", resultado)
+#     # Exibindo o resultado completo
+#     print("Resultado: ", resultado)

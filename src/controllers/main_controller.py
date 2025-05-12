@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # from models.data_model import DataModel
 # from views.main_view import MainView
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # from src.models.data_model import DataModel
 # import unittest
 

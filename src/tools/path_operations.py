@@ -1,119 +1,144 @@
+# -*- coding: utf-8 -*-
 """
-Módulo com utilitários para análise e manipulação de caminhos de arquivos e pastas,
-baseado na biblioteca pathlib. Permite validações, normalizações e coleta de informações.
+Módulo simplificado para manipulação de caminhos com operações seguras e eficientes.
 """
 
-import re
-import difflib
+import grp
+from os import stat_result
 from pathlib import Path
-from typing import Union, Optional
+import pwd
+import re
+from typing import Any, Optional, Union
+
+from tools.datetime_utils import GerenciadorDeDataHora
 
 
-class GerenciadorDeCaminho:
+class GerenciadorDeCaminhos:
     """
-    Classe que representa um caminho de arquivo ou pasta e fornece
-    diversas informações e utilitários sobre ele.
+    Classe para gerenciamento de caminhos de arquivos e diretórios.
     """
 
-    def __init__(self, caminho: Union[str, Path]) -> None:
+    def __init__(self, caminho_entrada: Union[str, Path]) -> None:
         """
-        Inicializa o objeto com um caminho e realiza todas as verificações e normalizações.
+        Inicializa o gerenciador com um caminho e validações básicas.
 
         Args:
-            caminho (Union[str, Path]): Caminho bruto a ser analisado.
+            caminho_entrada: Caminho absoluto ou relativo como string ou objeto Path
         """
-        self.caminho_bruto: str = str(caminho)
-        self.caminho: Path = self._sanitizar_path(caminho)
-        self.existe: bool = self.caminho.exists()
-        self.eh_arquivo: bool = self.caminho.is_file()
-        self.eh_pasta: bool = self.caminho.is_dir()
-        self.eh_absoluto: bool = self.caminho.is_absolute()
-        self.eh_relativo: bool = not self.eh_absoluto
-        self.nome: str = self.caminho.name
-        self.extensao: str = self.caminho.suffix.lstrip(".") if self.eh_arquivo else ""
-        self.pai: str = str(self.caminho.parent)
+        self._caminho_original: str = str(caminho_entrada)
+        self._caminho_sanitizado: Path = self._sanitizar_path(caminho_entrada)
+        self._estatisticas: Optional[stat_result] = None
+        self._inicializar_propriedades()
 
-    def obter_info(self) -> dict[str, Union[str, bool, Optional[Path]]]:
-        """
-        Retorna todas as informações sobre o caminho em forma de dicionário.
+        # Inicializa o GerenciadorDeDataHora com base nas estatísticas do caminho
+        self._gerenciador_data_hora = GerenciadorDeDataHora(
+            timestamp_modificacao=self._estatisticas.st_mtime if self._estatisticas else 0.0,
+            timestamp_acesso=self._estatisticas.st_atime if self._estatisticas else 0.0,
+            timestamp_criacao=self._estatisticas.st_ctime if self._estatisticas else 0.0,
+            dias_antes=7,
+        )
 
-        Returns:
-            dict[str, Union[str, bool, Optional[Path]]]: Dicionário
-            contendo informações sobre o caminho.
-        """
-        info: dict[str, Union[str, bool, Optional[Path]]] = {
-            "caminho_bruto": self.caminho_bruto,
-            "caminho_normalizado": str(self.caminho),
-            "existe": self.existe,
-            "eh_arquivo": self.eh_arquivo,
-            "eh_pasta": self.eh_pasta,
-            "eh_absoluto": self.eh_absoluto,
-            "eh_relativo": self.eh_relativo,
-            "nome": self.nome,
-            "extensao": self.extensao,
-            "pai": self.pai,
+    def _inicializar_propriedades(self) -> None:
+        """Inicializa as propriedades básicas do caminho."""
+        self._estatisticas = (
+            self._caminho_sanitizado.stat() if self._caminho_sanitizado.exists() else None
+        )
+
+    @property
+    def tipo(self) -> str:
+        """Retorna o tipo do item: 'arquivo', 'pasta' ou 'inexistente'."""
+        if not self._caminho_sanitizado.exists():
+            return "inexistente"
+        return "Arquivo" if self._caminho_sanitizado.is_file() else "Pasta"
+
+    @property
+    def permissoes(self) -> Optional[str]:
+        """Retorna as permissões no formato legível."""
+        if not self._estatisticas:
+            return None
+        try:
+            modo = self._estatisticas.st_mode
+            user = pwd.getpwuid(self._estatisticas.st_uid).pw_name
+            group = grp.getgrgid(self._estatisticas.st_gid).gr_name
+            permissoes = self._formatar_permissoes(modo)
+            return f"{permissoes} {user}:{group}"
+        except (KeyError, PermissionError):
+            return None
+
+    def obter_informacoes(self) -> dict[str, Any]:
+        """Retorna um dicionário completo com todas as informações do caminho."""
+        informacoes = self._gerenciador_data_hora.obter_informacoes()
+        info_datas_convertidas = informacoes.get("datas_formatadas", {})
+
+        dados = {
+            "geral": {
+                "caminho_original": self._caminho_original,
+                "caminho_corrigido": str(self._caminho_sanitizado),
+                "tipo_caminho": self.tipo,
+                "caminho_existe": self._caminho_sanitizado.exists(),
+                "nome_caminho": self._caminho_sanitizado.name,
+                "diretorio_pai_caminho": str(self._caminho_sanitizado.parent),
+            },
+            "datas": {
+                "data_modificacao": info_datas_convertidas.get("data_modificacao_formatada", ""),
+                "data_acesso": info_datas_convertidas.get("data_acesso_formatada", ""),
+                "data_criacao": info_datas_convertidas.get("data_criacao_formatada", ""),
+            },
         }
 
-        caminho_corrigido: Optional[Path] = self.tentar_corrigir()
-        if caminho_corrigido:
-            info["caminho_corrigido"] = caminho_corrigido
-        else:
-            info["caminho_corrigido"] = None
+        if self.tipo == "Arquivo":
+            dados["arquivo"] = {
+                "extensao": self._caminho_sanitizado.suffix,
+                "tamanho_bytes": self._estatisticas.st_size if self._estatisticas else 0,
+                "permissoes": self.permissoes,
+            }
+        elif self.tipo == "Pasta":
+            dados["pasta"] = {
+                "permissoes": self.permissoes,
+            }
 
-        return info
-
-    def tentar_corrigir(self) -> Optional[Path]:
-        """
-        Tenta corrigir o caminho com base em similaridade com diretórios existentes.
-
-        Returns:
-            Optional[Path]: Caminho corrigido, se possível.
-        """
-        partes: tuple[str, ...] = self.caminho.parts
-        caminho_atual: Path = Path(partes[0]) if self.caminho.is_absolute() else Path()
-        for parte in partes[1:]:
-            if not caminho_atual.exists():
-                return None
-            try:
-                opcoes: list[str] = [p.name for p in caminho_atual.iterdir()]
-            except (PermissionError, FileNotFoundError, NotADirectoryError):
-                return None
-            similares: list[str] = difflib.get_close_matches(parte, opcoes, n=1, cutoff=0.6)
-            caminho_atual = caminho_atual / (similares[0] if similares else parte)
-        return caminho_atual if caminho_atual.exists() else None
-
-    def criar_diretorio(self) -> None:
-        """Cria o diretório atual se ele não existir (incluindo pais)."""
-        if not self.eh_arquivo and not self.caminho.exists():
-            self.caminho.mkdir(parents=True, exist_ok=True)
+        return dados
 
     @staticmethod
-    def _sanitizar_path(caminho: Union[str, Path]) -> Path:
-        """
-        Sanitiza o caminho aplicando limpeza e conversão segura para Path.
+    def _sanitizar_path(caminho_bruto: Union[str, Path]) -> Path:
+        """Normaliza e sanitiza um caminho bruto de forma segura."""
+        caminho_str = str(caminho_bruto).strip()
+        caminho_normal = re.sub(r"[\\]+", "/", caminho_str)
+        return Path(caminho_normal).expanduser().resolve(strict=False)
 
-        Args:
-            caminho (Union[str, Path]): Caminho de entrada.
-
-        Returns:
-            Path: Caminho normalizado.
-        """
-        try:
-            caminho_str: str = str(caminho) if isinstance(caminho, Path) else caminho
-            caminho_normal: str = caminho_str.strip()
-            caminho_normal = re.sub(r"[\\]+", "/", caminho_normal)
-            caminho_normal = re.sub(r"\s*/\s*", "/", caminho_normal)
-            caminho_normal = re.sub(r"/{2,}", "/", caminho_normal)
-            caminho_normal = re.sub(r"[<>:\"|?*]", "", caminho_normal)
-            while caminho_normal.startswith("../"):
-                caminho_normal = caminho_normal[3:]
-            return Path(caminho_normal).expanduser().resolve(strict=False)
-        except Exception as e:
-            raise ValueError(f"Caminho inválido: {caminho}") from e
+    @staticmethod
+    def _formatar_permissoes(modo: int) -> str:
+        """Converte as permissões para o formato legível (rwxr-xr-x)."""
+        permissoes = [
+            (modo & 0o400, "r"),
+            (modo & 0o200, "w"),
+            (modo & 0o100, "x"),  # Dono
+            (modo & 0o040, "r"),
+            (modo & 0o020, "w"),
+            (modo & 0o010, "x"),  # Grupo
+            (modo & 0o004, "r"),
+            (modo & 0o002, "w"),
+            (modo & 0o001, "x"),  # Outros
+        ]
+        return "".join(letra if flag else "-" for flag, letra in permissoes)
 
 
-# Exemplo de uso:
+# # Exemplo de uso
+# if __name__ == "__main__":
+#     caminho_arquivo = "~/Downloads/Firefox/bookmarks.html"
+#     caminho_pasta = "~/Downloads/"
 
-if __name__ == "__main__":
-    analisador = GerenciadorDeCaminho("~/Downloads/Firefox/bookmarks.html")
-    print(analisador.obter_info())
+#     def exibir_em_tabela(titulo: str, dados: dict[str, Any]) -> None:
+#         print("\n" + "=" * 60)
+#         print(f"{titulo.upper():^60}")
+#         print("=" * 60)
+#         for chave, valor in dados.items():
+#             print(f"{chave}: {valor}")
+
+#     gerenciador_arquivo = GerenciadorDeCaminhos(caminho_arquivo)
+#     info_arquivo = gerenciador_arquivo.obter_informacoes()
+#     exibir_em_tabela(f"Analisando arquivo: {caminho_arquivo}", info_arquivo)
+
+#     gerenciador_pasta = GerenciadorDeCaminhos(caminho_pasta)
+#     info_pasta = gerenciador_pasta.obter_informacoes()
+#     exibir_em_tabela(f"Analisando pasta: {caminho_pasta}", info_pasta)

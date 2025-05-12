@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # """
 # Classe que representa a estrutura de dados da aplicação.
 # """
