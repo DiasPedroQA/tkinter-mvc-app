@@ -5,7 +5,7 @@ from typing import Dict, Union
 
 import pytest
 
-from tools.datetime_utils import GerenciadorDeDataHora
+from src.tools.datetime_utils import GerenciadorDeDataHora
 
 
 @pytest.fixture

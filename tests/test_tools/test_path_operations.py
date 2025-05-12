@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from tools.path_operations import GerenciadorDeCaminhos
+from src.tools.path_operations import GerenciadorDeCaminhos
 
 
 @pytest.fixture

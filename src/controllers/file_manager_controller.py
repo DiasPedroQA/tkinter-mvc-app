@@ -11,7 +11,7 @@
 # from pathlib import Path
 # from models.file_objects import ObjetoArquivo, ObjetoPasta
 # from models.analysis_result import ResultadoAnalise
-# from tools.path_utils import normalizar_caminho, tentar_corrigir_caminho
+# from src.tools.path_utils import normalizar_caminho, tentar_corrigir_caminho
 
 
 # class GerenciadorArquivos:
