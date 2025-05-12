@@ -108,9 +108,9 @@ def test_obter_informacoes_inexistente() -> None:
     assert informacoes["geral"]["caminho_existe"] is False
     assert "datas" in informacoes
     assert informacoes["datas"] == {
-        "data_acesso": "31/12/1969 21:00:00",
-        "data_criacao": "31/12/1969 21:00:00",
-        "data_modificacao": "31/12/1969 21:00:00",
+        "data_acesso": "01/01/1970 00:00:00",
+        "data_criacao": "01/01/1970 00:00:00",
+        "data_modificacao": "01/01/1970 00:00:00",
     }
 
 
