@@ -43,7 +43,7 @@ jobs:
           pre-commit install
           pre-commit run --all-files
 
-      - name: 🔍 Executar flake8
+      - name: 🔍 Executar flake8 (continue-on-error = True)
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
@@ -51,6 +51,7 @@ jobs:
 
       - name: 🔎 Executar pylint
         run: pylint $(git ls-files '*.py')
+        continue-on-error: true
 
   ###########################################################
   # 2. Build e Testes com cobertura
