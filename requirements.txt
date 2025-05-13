@@ -1,4 +1,4 @@
-ttkbootstrap==1.13.1
+ttkbootstrap==1.13.3
 ttkthemes==3.2.2
 beautifulsoup4==4.13.4
 requests==2.32.3
