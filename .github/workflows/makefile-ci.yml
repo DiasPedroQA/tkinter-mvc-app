@@ -19,13 +19,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install dependencies via Makefile
         run: make install
 
       - name: 🚀 Run pre-commit hooks
-        run: |
-          make pre-commit
-          pre-commit run --all-files
+        run: make pre-commit
 
       - name: ✅ Run tests
         run: make test

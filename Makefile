@@ -4,40 +4,40 @@ VENV := .venv
 PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 PRECOMMIT := $(VENV)/bin/pre-commit
-SRC_DIR = src
-TEST_DIR = tests
+SRC_DIR := src
+TEST_DIR := tests
 
 # Garante que o venv exista
 venv:
-	@test -d $(VENV_DIR) || python3 -m venv $(VENV_DIR)
+	@test -d $(VENV) || python3 -m venv $(VENV)
 
-install:
+install: venv
 	$(PIP) install -r requirements.txt
 
 test: venv
-	$(VENV_DIR)/bin/pytest $(TEST_DIR)
+	$(VENV)/bin/pytest $(TEST_DIR)
 
 lint: venv
-	$(VENV_DIR)/bin/black .
-	$(VENV_DIR)/bin/isort .
-	$(VENV_DIR)/bin/flake8
+	$(VENV)/bin/black .
+	$(VENV)/bin/isort .
+	$(VENV)/bin/flake8
 
 mypy: venv
-	$(VENV_DIR)/bin/mypy $(SRC_DIR)
+	$(VENV)/bin/mypy $(SRC_DIR)
 
-pre-commit:
+pre-commit: venv
 	$(PRECOMMIT) install
 	$(PRECOMMIT) run --all-files
 
 coverage: venv
-	$(VENV_DIR)/bin/pytest --cov=$(SRC_DIR) --cov-report=term --cov-report=html
+	$(VENV)/bin/pytest --cov=$(SRC_DIR) --cov-report=term --cov-report=html
 
 format: venv
-	$(VENV_DIR)/bin/black .
-	$(VENV_DIR)/bin/isort .
+	$(VENV)/bin/black .
+	$(VENV)/bin/isort .
 
 security: venv
-	$(VENV_DIR)/bin/bandit -r $(SRC_DIR)
+	$(VENV)/bin/bandit -r $(SRC_DIR)
 
 run: venv
 	$(PYTHON) $(SRC_DIR)/main.py
@@ -46,14 +46,7 @@ all: clean install test run
 
 clean:
 	@echo "Removendo arquivos temporários..."
-	rm -rf .pytest_cache
-	rm -rf __pycache__
-	rm -rf .coverage
-	rm -rf build
-	rm -rf dist
-	rm -rf *.egg-info
-	rm -rf logs
-	rm -rf $(VENV_DIR)
+	rm -rf .pytest_cache __pycache__ .coverage build dist *.egg-info logs $(VENV)
 
 docker-build:
 	docker build -t tkinter-mvc-app .
