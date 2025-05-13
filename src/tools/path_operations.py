@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 from typing import Optional, Union
 
-from datetime_utils import FormatadorDeDataHora
+from src.tools.datetime_utils import FormatadorDeDataHora
 
 
 class GerenciadorDeCaminhos:
