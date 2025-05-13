@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C, R, W
+# pylint: disable=C, R, W, I
 
 """
 Módulo para manipulação e análise de caminhos de arquivos e pastas com uso de pathlib.
@@ -8,7 +8,6 @@ Módulo para manipulação e análise de caminhos de arquivos e pastas com uso d
 import os
 from pathlib import Path
 import re
-from typing import Optional, Union
 
 from src.tools.datetime_utils import FormatadorDeDataHora
 
@@ -18,7 +17,7 @@ class GerenciadorDeCaminhos:
     Classe para análise de caminhos de arquivos e diretórios.
     """
 
-    def __init__(self, caminho_entrada: Union[str, Path]) -> None:
+    def __init__(self, caminho_entrada: str | Path) -> None:
         """
         Inicializa o gerenciador com um caminho e prepara os dados.
 
@@ -26,16 +25,16 @@ class GerenciadorDeCaminhos:
             caminho_entrada: Caminho absoluto ou relativo (str ou Path).
         """
         self._caminho_original: str = str(caminho_entrada)
-        self._caminho_sanitizado: Path = self._sanitizar_path(caminho_entrada)
+        self._caminho_sanitizado: Path = self._sanitizar_path(caminho_bruto=caminho_entrada)
 
         self._existe: bool = self._caminho_sanitizado.exists()
         self._tipo: str = self._determinar_tipo()
-        self._estatisticas: Optional[os.stat_result] = (
+        self._estatisticas: os.stat_result | None = (
             self._caminho_sanitizado.stat() if self._existe else None
         )
 
         self._tamanho_bytes: int = self._obter_tamanho()
-        self._tamanho_formatado: str = self._formatar_tamanho(self._tamanho_bytes)
+        self._tamanho_formatado: str = self._formatar_tamanho(tamanho_bytes=self._tamanho_bytes)
 
         self._gerenciador_data_hora = FormatadorDeDataHora(
             timestamp_modificacao=self._estatisticas.st_mtime if self._estatisticas else 0.0,
@@ -45,9 +44,9 @@ class GerenciadorDeCaminhos:
         )
 
     @staticmethod
-    def _sanitizar_path(caminho_bruto: Union[str, Path]) -> Path:
+    def _sanitizar_path(caminho_bruto: str | Path) -> Path:
         """Sanitiza e normaliza o caminho fornecido."""
-        caminho_str = str(caminho_bruto).strip()
+        caminho_str: str = str(caminho_bruto).strip()
         caminho_normalizado = re.sub(r"[\\]+", "/", caminho_str)
         return Path(caminho_normalizado).expanduser().resolve(strict=False)
 
@@ -69,7 +68,7 @@ class GerenciadorDeCaminhos:
     @staticmethod
     def _formatar_tamanho(tamanho_bytes: int) -> str:
         """Converte o tamanho de bytes para uma string legível."""
-        unidades = ["B", "KB", "MB", "GB", "TB"]
+        unidades: list[str] = ["B", "KB", "MB", "GB", "TB"]
         tamanho = float(tamanho_bytes)
         for unidade in unidades:
             if tamanho < 1024:
@@ -80,7 +79,7 @@ class GerenciadorDeCaminhos:
     @staticmethod
     def _formatar_permissoes(modo: int) -> str:
         """Converte as permissões numéricas para rwxr-xr-x."""
-        permissoes = [
+        permissoes: list[tuple[int, str]] = [
             (modo & 0o400, "r"),
             (modo & 0o200, "w"),
             (modo & 0o100, "x"),
@@ -97,11 +96,11 @@ class GerenciadorDeCaminhos:
     def permissoes(self) -> str:
         """Permissões do item no formato legível."""
         if not self._estatisticas:
-            return self._formatar_permissoes(0)
+            return self._formatar_permissoes(modo=0)
         try:
-            return self._formatar_permissoes(self._estatisticas.st_mode)
+            return self._formatar_permissoes(modo=self._estatisticas.st_mode)
         except Exception:
-            return self._formatar_permissoes(0)
+            return self._formatar_permissoes(modo=0)
 
     @property
     def tipo(self) -> str:
@@ -112,7 +111,7 @@ class GerenciadorDeCaminhos:
         """
         Retorna um dicionário com informações gerais e de datas.
         """
-        info_data_e_hora: dict[str, Union[str, int, float]] = (
+        info_data_e_hora: dict[str, str | int | float] = (
             self._gerenciador_data_hora.infos_de_data_e_hora()
         )
 
@@ -130,7 +129,7 @@ class GerenciadorDeCaminhos:
         if self._tipo == "Arquivo":
             dados_gerais["extensao_arquivo"] = self._caminho_sanitizado.suffix
 
-        dados_data: dict[str, Union[str, int, float]] = {
+        dados_data: dict[str, str | int | float] = {
             "timestamp_modificacao": info_data_e_hora.get("timestamp_modificacao", 0.0),
             "timestamp_acesso": info_data_e_hora.get("timestamp_acesso", 0.0),
             "timestamp_criacao": info_data_e_hora.get("timestamp_criacao", 0.0),
@@ -155,14 +154,14 @@ if __name__ == "__main__":
     str_arquivo = "~/Downloads/Firefox/bookmarks.html"
     str_pasta = "~/Downloads/"
 
-    gerenciador_arquivo = GerenciadorDeCaminhos(str_arquivo)
-    info_arquivo = gerenciador_arquivo.informacoes_de_caminho()
+    gerenciador_arquivo = GerenciadorDeCaminhos(caminho_entrada=str_arquivo)
+    info_arquivo: dict = gerenciador_arquivo.informacoes_de_caminho()
     print(f"\n\nAnalisando arquivo: {str_arquivo}")
     for chave, valor in info_arquivo.items():
         print(f"\n{chave}: {valor}")
 
-    gerenciador_pasta = GerenciadorDeCaminhos(str_pasta)
-    info_pasta = gerenciador_pasta.informacoes_de_caminho()
+    gerenciador_pasta = GerenciadorDeCaminhos(caminho_entrada=str_pasta)
+    info_pasta: dict = gerenciador_pasta.informacoes_de_caminho()
     print(f"\n\nAnalisando pasta: {str_pasta}")
     for chave, valor in info_pasta.items():
         print(f"\n{chave}: {valor}")
