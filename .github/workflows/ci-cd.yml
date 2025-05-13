@@ -96,7 +96,7 @@ jobs:
           coverage report --fail-under=80
 
       - name: 📤 Enviar coverage para Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           slug: DiasPedroQA/tkinter-mvc-app
