@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=R
 """
 Módulo com utilitários para manipulação de datas e horários usando timestamp (float).
 """
