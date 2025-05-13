@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0212
+# pylint: disable=C, W
 
 """Testes para o módulo FormatadorDeDataHora (datetime_utils.py)."""
 

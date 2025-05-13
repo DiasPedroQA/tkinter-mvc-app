@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0621
+# pylint: disable=C, W
 
 """
 Testes para o módulo GerenciadorDeCaminhos, que obtém informações sobre arquivos e pastas.
