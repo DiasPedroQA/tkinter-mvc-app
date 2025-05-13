@@ -135,11 +135,13 @@
 #             "tamanho_total_formatado": "11.12 GB",
 #             "permissoes": "rwxr-xr-x pedro-pm-dias:pedro-pm-dias",
 #         },
-#     }
+# #     }
 
 #     # Criando o objeto de arquivo
 #     arquivo = ObjetoArquivo.from_dict(
-#         geral=dados_arquivo["geral"], datas=dados_arquivo["datas"], arquivo=dados_arquivo["arquivo"]
+#         geral=dados_arquivo["geral"],
+#         datas=dados_arquivo["datas"],
+#         arquivo=dados_arquivo["arquivo"]
 #     )
 #     print("\n=== Detalhes do Arquivo ===")
 #     print(arquivo)

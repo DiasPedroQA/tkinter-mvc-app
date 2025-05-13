@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C
+# pylint: disable=C, R, W
 
 """
 Módulo para manipulação e análise de caminhos de arquivos e pastas com uso de pathlib.
