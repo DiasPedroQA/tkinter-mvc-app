@@ -20,7 +20,10 @@ jobs:
           python-version: "3.11"
 
       - name: 📦 Install dependencies
-        run: make install
+        run: |
+          pip freeze > requirements.txt
+          python3 -r install requirements.txt
+          make install
 
       - name: 🚀 Run pre-commit hooks
         run: |
