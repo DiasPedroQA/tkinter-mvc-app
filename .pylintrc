@@ -575,7 +575,7 @@ never-returning-functions=sys.exit,argparse.parse_error
 
 [STRING]
 
-check-quote-consistency=yes
+# check-quote-consistency=yes
 # character used as a quote delimiter is used inconsistently within a module.
 check-quote-consistency=no
 
