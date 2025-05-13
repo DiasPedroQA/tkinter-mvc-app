@@ -155,9 +155,8 @@ max-line-length = 100
 # Desabilitar verificações específicas:
 # - R0902: Many instance attributes (muitas variáveis de instância em uma classe)
 # - R0903: Too few public methods (muito poucos métodos públicos em uma classe)
-# - W0621: Redefining name from outer scope (redefinição de variáveis externas)
 # - E0015: Mixed line endings (mistura de finais de linha)
-disable = ["R0902", "R0903", "W0621", "E0015"]
+disable = ["R0902", "R0903", "E0015"]
 
 # ============================================================
 # Configuração do pytest

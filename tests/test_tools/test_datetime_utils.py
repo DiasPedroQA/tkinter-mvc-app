@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Testes para o módulo GerenciadorDeDataHora (datetime_utils.py)."""
 
 from datetime import datetime, timedelta
 from typing import Dict, Union
@@ -9,7 +10,7 @@ from src.tools.datetime_utils import GerenciadorDeDataHora
 
 
 @pytest.fixture
-def timestamps() -> Dict[str, Union[str, int, float]]:
+def dados() -> Dict[str, Union[str, int, float]]:
     """
     Fixture para fornecer timestamps de teste.
     """
@@ -22,34 +23,34 @@ def timestamps() -> Dict[str, Union[str, int, float]]:
     }
 
 
-def test_formatar_data_e_hora(timestamps: Dict[str, Union[str, int, float]]) -> None:
+def test_formatar_data_e_hora(dados: Dict[str, Union[str, int, float]]) -> None:
     """
     Testa se o método formatar_data_e_hora retorna uma string formatada corretamente.
     """
     gerenciador = GerenciadorDeDataHora()
-    timestamp = float(timestamps["modificacao"])
+    timestamp = float(dados["modificacao"])
     data_formatada = gerenciador.formatar_data_e_hora(timestamp)
     assert isinstance(data_formatada, str)
     assert datetime.strptime(data_formatada, "%d/%m/%Y %H:%M:%S")
 
 
-def test_dias_desde_timestamp(timestamps: Dict[str, Union[str, int, float]]) -> None:
+def test_dias_desde_timestamp(dados: Dict[str, Union[str, int, float]]) -> None:
     """
     Testa o cálculo de dias desde um timestamp fornecido.
     """
     gerenciador = GerenciadorDeDataHora()
-    timestamp = float(timestamps["criacao"])
+    timestamp = float(dados["criacao"])
     dias_passados = gerenciador.dias_desde_timestamp(timestamp)
     assert isinstance(dias_passados, int)
     assert dias_passados == 10
 
 
-def test_timestamp_ha_n_dias_atras(timestamps: Dict[str, Union[str, int, float]]) -> None:
+def test_timestamp_ha_n_dias_atras(dados: Dict[str, Union[str, int, float]]) -> None:
     """
     Testa se o método retorna o timestamp correto para n dias atrás.
     """
     gerenciador = GerenciadorDeDataHora()
-    n_dias = int(timestamps["dias_antes"])
+    n_dias = int(dados["dias_antes"])
     timestamp_calculado = gerenciador.timestamp_ha_n_dias_atras(n_dias)
     assert isinstance(timestamp_calculado, float)
     data_calculada = datetime.fromtimestamp(timestamp_calculado).date()
@@ -57,17 +58,15 @@ def test_timestamp_ha_n_dias_atras(timestamps: Dict[str, Union[str, int, float]]
     assert data_calculada == data_esperada
 
 
-def test_obter_informacoes_com_todos_timestamps(
-    timestamps: Dict[str, Union[str, int, float]],
-) -> None:
+def test_obter_informacoes_com_todos_timestamps(dados: Dict[str, Union[str, int, float]]) -> None:
     """
     Testa o método obter_informacoes com todos os timestamps fornecidos.
     """
     gerenciador = GerenciadorDeDataHora(
-        timestamp_modificacao=float(timestamps["modificacao"]),
-        timestamp_acesso=float(timestamps["acesso"]),
-        timestamp_criacao=float(timestamps["criacao"]),
-        dias_antes=int(timestamps["dias_antes"]),
+        timestamp_modificacao=float(dados["modificacao"]),
+        timestamp_acesso=float(dados["acesso"]),
+        timestamp_criacao=float(dados["criacao"]),
+        dias_antes=int(dados["dias_antes"]),
     )
     informacoes = gerenciador.obter_informacoes()
 
@@ -95,13 +94,13 @@ def test_obter_informacoes_com_todos_timestamps(
 
 
 def test_obter_informacoes_com_timestamps_parciais(
-    timestamps: Dict[str, Union[str, int, float]],
+    dados: Dict[str, Union[str, int, float]],
 ) -> None:
     """
     Testa o método obter_informacoes com apenas alguns timestamps fornecidos.
     """
     gerenciador = GerenciadorDeDataHora(
-        timestamp_modificacao=float(timestamps["modificacao"]),
+        timestamp_modificacao=float(dados["modificacao"]),
         timestamp_acesso=None,
         timestamp_criacao=None,
     )

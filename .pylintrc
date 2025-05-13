@@ -113,7 +113,6 @@ enable=
 disable=
     attribute-defined-outside-init,
     # attribute-defined-outside-init,
-    missing-docstring,
     protected-access,
     too-few-public-methods,
     # handled by black
@@ -128,7 +127,7 @@ disable=
     no-value-for-parameter,
     E0015,
     E1120,
-    W0621,
+
 
 
 [REPORTS]

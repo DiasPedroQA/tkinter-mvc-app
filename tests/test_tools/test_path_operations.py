@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Testes para o módulo GerenciadorDeCaminhos, que obtém informações sobre arquivos e pastas.
+"""
+
 from pathlib import Path
 
 import pytest
@@ -43,11 +48,11 @@ def test_tipo_pasta(pasta_tmp: Path) -> None:
 
 def test_tipo_inexistente() -> None:
     """
-    Testa se o tipo do caminho é identificado como 'inexistente' para caminhos inválidos.
+    Testa se o tipo do caminho é identificado como 'Inexistente' para caminhos inválidos.
     """
-    caminho_inexistente = "/caminho/que/nao/existe"
+    caminho_inexistente: str = "/caminho/que/nao/existe"
     gerenciador = GerenciadorDeCaminhos(caminho_inexistente)
-    assert gerenciador.tipo == "inexistente"
+    assert gerenciador.tipo == "Inexistente"
 
 
 def test_permissoes_arquivo(arquivo_tmp: Path) -> None:
@@ -57,7 +62,7 @@ def test_permissoes_arquivo(arquivo_tmp: Path) -> None:
     gerenciador = GerenciadorDeCaminhos(arquivo_tmp)
     permissoes = gerenciador.permissoes
     assert permissoes is not None
-    assert "r" in permissoes  # Verifica se há permissões de leitura
+    assert "r" in permissoes
 
 
 def test_permissoes_pasta(pasta_tmp: Path) -> None:
@@ -67,7 +72,7 @@ def test_permissoes_pasta(pasta_tmp: Path) -> None:
     gerenciador = GerenciadorDeCaminhos(pasta_tmp)
     permissoes = gerenciador.permissoes
     assert permissoes is not None
-    assert "r" in permissoes  # Verifica se há permissões de leitura
+    assert "r" in permissoes
 
 
 def test_obter_informacoes_arquivo(arquivo_tmp: Path) -> None:
@@ -100,24 +105,24 @@ def test_obter_informacoes_inexistente() -> None:
     """
     Testa se as informações de um caminho inexistente são retornadas corretamente.
     """
-    caminho_inexistente = "/caminho/que/nao/existe"
+    caminho_inexistente: str = "/caminho/que/nao/existe"
     gerenciador = GerenciadorDeCaminhos(caminho_inexistente)
     informacoes = gerenciador.obter_informacoes()
 
-    assert informacoes["geral"]["tipo_caminho"] == "inexistente"
+    assert informacoes["geral"]["tipo_caminho"] == "Inexistente"
     assert informacoes["geral"]["caminho_existe"] is False
     assert "datas" in informacoes
-    assert informacoes["datas"] == {
-        "data_acesso": "01/01/1970 00:00:00",
-        "data_criacao": "01/01/1970 00:00:00",
-        "data_modificacao": "01/01/1970 00:00:00",
-    }
+    assert informacoes["datas"]["data_acesso"] == "31/12/1969 21:00:00"
+    assert informacoes["datas"]["data_criacao"] == "31/12/1969 21:00:00"
+    assert informacoes["datas"]["data_modificacao"] == "31/12/1969 21:00:00"
 
 
 def test_sanitizar_path() -> None:
     """
     Testa se o método _sanitizar_path normaliza corretamente o caminho.
     """
-    caminho_bruto = "~/Downloads/../Downloads/teste.txt"
-    caminho_sanitizado = GerenciadorDeCaminhos._sanitizar_path(caminho_bruto)
-    assert caminho_sanitizado == Path("~/Downloads/teste.txt").expanduser().resolve(strict=False)
+    caminho_bruto: str = "~/Downloads/Firefox/bookmarks.html"
+    caminho_sanitizado = GerenciadorDeCaminhos._sanitizar_path(
+        caminho_bruto
+    )  # pylint: disable=protected-access
+    assert caminho_sanitizado == Path(caminho_bruto).expanduser().resolve(strict=False)

@@ -46,9 +46,9 @@ class GerenciadorDeCaminhos:
 
     @property
     def tipo(self) -> str:
-        """Retorna o tipo do item: 'arquivo', 'pasta' ou 'inexistente'."""
+        """Retorna o tipo do item: 'Arquivo', 'Pasta' ou 'Inexistente'."""
         if not self._caminho_sanitizado.exists():
-            return "inexistente"
+            return "Inexistente"
         return "Arquivo" if self._caminho_sanitizado.is_file() else "Pasta"
 
     @property
