@@ -2,7 +2,7 @@
 
 # This file is intentionally left blank.
 
-from src.tools.datetime_utils import GerenciadorDeDataHora
+from src.tools.datetime_utils import FormatadorDeDataHora
 from src.tools.path_operations import GerenciadorDeCaminhos
 
-__all__ = ["GerenciadorDeDataHora", "GerenciadorDeCaminhos"]
+__all__ = ["FormatadorDeDataHora", "GerenciadorDeCaminhos"]
