@@ -150,17 +150,17 @@ class GerenciadorDeCaminhos:
 
 # Exemplo de uso
 if __name__ == "__main__":
-    caminho_arquivo = "~/Downloads/Firefox/bookmarks.html"
-    caminho_pasta = "~/Downloads/"
+    str_arquivo = "~/Downloads/Firefox/bookmarks.html"
+    str_pasta = "~/Downloads/"
 
-    gerenciador_arquivo = GerenciadorDeCaminhos(caminho_arquivo)
+    gerenciador_arquivo = GerenciadorDeCaminhos(str_arquivo)
     info_arquivo = gerenciador_arquivo.informacoes_de_caminho()
-    print(f"\n\nAnalisando arquivo: {caminho_arquivo}")
+    print(f"\n\nAnalisando arquivo: {str_arquivo}")
     for chave, valor in info_arquivo.items():
         print(f"\n{chave}: {valor}")
 
-    gerenciador_pasta = GerenciadorDeCaminhos(caminho_pasta)
+    gerenciador_pasta = GerenciadorDeCaminhos(str_pasta)
     info_pasta = gerenciador_pasta.informacoes_de_caminho()
-    print(f"\n\nAnalisando pasta: {caminho_pasta}")
+    print(f"\n\nAnalisando pasta: {str_pasta}")
     for chave, valor in info_pasta.items():
         print(f"\n{chave}: {valor}")

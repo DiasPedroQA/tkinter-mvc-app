@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0212
+
 """Testes para o módulo FormatadorDeDataHora (datetime_utils.py)."""
 
 # tests/test_datetime_utils.py
