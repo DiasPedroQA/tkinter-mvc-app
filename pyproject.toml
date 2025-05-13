@@ -180,3 +180,7 @@ filterwarnings = ["error"]
 [tool.tox]
 # Lista de ambientes configurados
 envlist = ["py311", "lint", "mypy"]
+
+[tool.bandit]
+skips = ["B101", "B110"]
+exclude_dirs = ["tests"]

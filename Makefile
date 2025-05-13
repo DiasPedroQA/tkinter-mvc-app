@@ -12,7 +12,7 @@ venv:
 	@test -d $(VENV) || python3 -m venv $(VENV)
 
 install: venv
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r requirements-dev.txt
 
 test: venv
 	$(VENV)/bin/pytest $(TEST_DIR)
