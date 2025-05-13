@@ -22,7 +22,7 @@ jobs:
       - name: 📦 Install dependencies
         run: |
           pip freeze > requirements.txt
-          python3 -r install requirements.txt
+          pip -r install requirements.txt
           make install
 
       - name: 🚀 Run pre-commit hooks
