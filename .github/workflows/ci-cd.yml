@@ -114,25 +114,25 @@ jobs:
   ###########################################################
   # 3. Publicação no PyPI
   ###########################################################
-  pypi-publish:
-    name: 🚀 Publicar no PyPI
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    if: github.event_name == 'release' && github.event.action == 'published'
-    permissions:
-      id-token: write
+  # pypi-publish:
+  #   name: 🚀 Publicar no PyPI
+  #   runs-on: ubuntu-latest
+  #   needs: build-and-test
+  #   if: github.event_name == 'release' && github.event.action == 'published'
+  #   permissions:
+  #     id-token: write
 
-    steps:
-      - name: 📥 Baixar artefatos
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dists
-          path: dist/
+  #   steps:
+  #     - name: 📥 Baixar artefatos
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: release-dists
+  #         path: dist/
 
-      - name: 🚀 Publicar no PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: dist/
+  #     - name: 🚀 Publicar no PyPI
+  #       uses: pypa/gh-action-pypi-publish@release/v1
+  #       with:
+  #         packages-dir: dist/
 
   ###########################################################
   # 4. Build de pacotes para releases
