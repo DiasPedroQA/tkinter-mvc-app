@@ -1,5 +1,1 @@
-[flake8]
-max-complexity = 10
-max-line-length = 100
-ignore = E501, W503
-exclude = .git,__pycache__,.venv,venv,.mypy_cache,.pytest_cache,*.pyc,tkinter_mvc_app.egg-info
+.config/development/.flake8

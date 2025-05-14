@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C, W
+# pylint: disable=C, W, I
 
 """
 Testes para o módulo GerenciadorDeCaminhos, que obtém informações sobre arquivos e pastas.
@@ -14,17 +14,17 @@ from src.tools.path_operations import GerenciadorDeCaminhos
 
 @pytest.fixture
 def arquivo_teste(tmp_path: Path) -> Path:
-    caminho = tmp_path / "exemplo.txt"
-    caminho.write_text("conteúdo de teste")
+    caminho: Path = tmp_path / "exemplo.txt"
+    caminho.write_text(data="conteúdo de teste")
     return caminho
 
 
 @pytest.fixture
 def pasta_teste(tmp_path: Path) -> Path:
-    pasta = tmp_path / "pasta_exemplo"
+    pasta: Path = tmp_path / "pasta_exemplo"
     pasta.mkdir()
-    (pasta / "arquivo1.txt").write_text("teste 1")
-    (pasta / "arquivo2.txt").write_text("teste 2")
+    (pasta / "arquivo1.txt").write_text(data="teste 1")
+    (pasta / "arquivo2.txt").write_text(data="teste 2")
     return pasta
 
 
@@ -34,48 +34,48 @@ def caminho_inexistente(tmp_path: Path) -> Path:
 
 
 def test_sanitizacao_de_path(arquivo_teste: Path) -> None:
-    caminho_str = str(arquivo_teste).replace("\\", "\\\\")
-    gerenciador = GerenciadorDeCaminhos(caminho_str)
+    caminho_str: str = str(arquivo_teste).replace("\\", "\\\\")
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=caminho_str)
     assert gerenciador._caminho_sanitizado.exists()
 
 
 def test_determinar_tipo_arquivo(arquivo_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(arquivo_teste)
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=arquivo_teste)
     assert gerenciador.tipo == "Arquivo"
 
 
 def test_determinar_tipo_pasta(pasta_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(pasta_teste)
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=pasta_teste)
     assert gerenciador.tipo == "Pasta"
 
 
 def test_determinar_tipo_inexistente(caminho_inexistente: str) -> None:
-    gerenciador = GerenciadorDeCaminhos(caminho_inexistente)
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=caminho_inexistente)
     assert gerenciador.tipo == "Inexistente"
 
 
 def test_tamanho_arquivo(arquivo_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(arquivo_teste)
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=arquivo_teste)
     assert gerenciador._tamanho_bytes > 0
     assert "B" in gerenciador._tamanho_formatado
 
 
 def test_tamanho_pasta(pasta_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(pasta_teste)
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=pasta_teste)
     assert gerenciador._tamanho_bytes > 0
     assert "KB" in gerenciador._tamanho_formatado or "B" in gerenciador._tamanho_formatado
 
 
 def test_permissoes(arquivo_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(arquivo_teste)
-    permissoes = gerenciador.permissoes
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=arquivo_teste)
+    permissoes: str = gerenciador.permissoes
     assert isinstance(permissoes, str)
     assert len(permissoes) == 9
 
 
 def test_informacoes_de_caminho_arquivo(arquivo_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(arquivo_teste)
-    info = gerenciador.informacoes_de_caminho()
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=arquivo_teste)
+    info: dict = gerenciador.informacoes_de_caminho()
     assert "geral" in info
     assert "datas" in info
     assert info["geral"]["tipo_caminho"] == "Arquivo"
@@ -83,8 +83,8 @@ def test_informacoes_de_caminho_arquivo(arquivo_teste: Path) -> None:
 
 
 def test_informacoes_de_caminho_pasta(pasta_teste: Path) -> None:
-    gerenciador = GerenciadorDeCaminhos(pasta_teste)
-    info = gerenciador.informacoes_de_caminho()
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=pasta_teste)
+    info: dict = gerenciador.informacoes_de_caminho()
     assert "geral" in info
     assert "datas" in info
     assert info["geral"]["tipo_caminho"] == "Pasta"
@@ -92,8 +92,8 @@ def test_informacoes_de_caminho_pasta(pasta_teste: Path) -> None:
 
 
 def test_informacoes_para_caminho_inexistente(caminho_inexistente: str) -> None:
-    gerenciador = GerenciadorDeCaminhos(caminho_inexistente)
-    info = gerenciador.informacoes_de_caminho()
+    gerenciador = GerenciadorDeCaminhos(caminho_entrada=caminho_inexistente)
+    info: dict = gerenciador.informacoes_de_caminho()
     assert info["geral"]["caminho_existe"] == "Não"
     assert info["geral"]["tipo_caminho"] == "Inexistente"
     assert info["datas"]["timestamp_modificacao"] == 0.0

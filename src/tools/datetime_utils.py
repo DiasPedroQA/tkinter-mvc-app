@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=R
+# pylint: disable=R, I
 """
 Módulo com utilitários para manipulação de datas e horários usando timestamp (float).
 """
 
 from datetime import datetime, timedelta
 import locale
-from typing import Union
 
 try:
     locale.setlocale(category=locale.LC_TIME, locale="pt_BR.UTF-8")
@@ -26,21 +25,46 @@ class FormatadorDeDataHora:
         timestamp_criacao: float | None,
         dias_antes: int | None,
     ) -> None:
-        self.timestamp_modificacao = timestamp_modificacao
-        self.timestamp_acesso = timestamp_acesso
-        self.timestamp_criacao = timestamp_criacao
-        self.dias_antes = dias_antes
-        self.timestamp_n_dias_atras = (
-            self._timestamp_ha_n_dias_atras(dias_antes) if dias_antes is not None else None
+        self.timestamp_modificacao: float | None = timestamp_modificacao
+        self.timestamp_acesso: float | None = timestamp_acesso
+        self.timestamp_criacao: float | None = timestamp_criacao
+        self.dias_antes: int | None = dias_antes
+        self.timestamp_n_dias_atras: float | None = (
+            self._timestamp_ha_n_dias_atras(dias=dias_antes) if dias_antes is not None else None
         )
 
     def _formatar_data(self, timestamp: float, formato: str = "%d/%m/%Y %H:%M:%S") -> str:
+        """Converte um timestamp em uma string de data formatada.
+
+        Args:
+            timestamp (float): Timestamp Unix (segundos desde 01/01/1970).
+            formato (str, optional): Formato da data (padrão: "%d/%m/%Y %H:%M:%S").
+
+        Returns:
+            str: Data formatada como string.
+        """
         return datetime.fromtimestamp(timestamp).strftime(formato)
 
     def _dias_desde(self, timestamp: float) -> int:
+        """Calcula quantos dias se passaram desde uma data.
+
+        Args:
+            timestamp (float): Timestamp Unix da data de referência.
+
+        Returns:
+            int: Número de dias desde a data fornecida até hoje.
+        """
         return (datetime.now().date() - datetime.fromtimestamp(timestamp).date()).days
 
     def _timestamp_ha_n_dias_atras(self, dias: int) -> float:
+        """Obtém o timestamp de N dias atrás a partir da data atual.
+
+        Args:
+            dias (int): Quantidade de dias no passado.
+
+        Returns:
+        float: Timestamp Unix correspondente à data calculada.
+        """
         return (datetime.now() - timedelta(days=dias)).timestamp()
 
     def _adicionar_info_timestamp(
@@ -60,12 +84,12 @@ class FormatadorDeDataHora:
             dict_datas (dict): Dicionário que receberá datas formatadas e dias.
         """
         dict_timestamps[f"timestamp_{chave_base}"] = timestamp
-        dict_datas[f"data_{chave_base}_formatada"] = self._formatar_data(timestamp)
+        dict_datas[f"data_{chave_base}_formatada"] = self._formatar_data(timestamp=timestamp)
 
         if chave_base != "n_dias_atras":
-            dict_datas[f"dias_desde_{chave_base}"] = self._dias_desde(timestamp)
+            dict_datas[f"dias_desde_{chave_base}"] = self._dias_desde(timestamp=timestamp)
 
-    def infos_de_data_e_hora(self) -> dict[str, Union[str, int, float]]:
+    def infos_de_data_e_hora(self) -> dict[str, str | int | float]:
         """
         Retorna as informações principais de data e hora de forma legível,
         combinando timestamps e datas formatadas em um único dicionário.
@@ -75,26 +99,38 @@ class FormatadorDeDataHora:
 
         if self.timestamp_modificacao is not None:
             self._adicionar_info_timestamp(
-                "modificacao", self.timestamp_modificacao, timestamps, datas_formatadas
+                chave_base="modificacao",
+                timestamp=self.timestamp_modificacao,
+                dict_timestamps=timestamps,
+                dict_datas=datas_formatadas,
             )
 
         if self.timestamp_acesso is not None:
             self._adicionar_info_timestamp(
-                "acesso", self.timestamp_acesso, timestamps, datas_formatadas
+                chave_base="acesso",
+                timestamp=self.timestamp_acesso,
+                dict_timestamps=timestamps,
+                dict_datas=datas_formatadas,
             )
 
         if self.timestamp_criacao is not None:
             self._adicionar_info_timestamp(
-                "criacao", self.timestamp_criacao, timestamps, datas_formatadas
+                chave_base="criacao",
+                timestamp=self.timestamp_criacao,
+                dict_timestamps=timestamps,
+                dict_datas=datas_formatadas,
             )
 
         if self.timestamp_n_dias_atras is not None:
             self._adicionar_info_timestamp(
-                "n_dias_atras", self.timestamp_n_dias_atras, timestamps, datas_formatadas
+                chave_base="n_dias_atras",
+                timestamp=self.timestamp_n_dias_atras,
+                dict_timestamps=timestamps,
+                dict_datas=datas_formatadas,
             )
 
         # Junta tudo num dicionário só
-        info_data_e_hora: dict[str, Union[str, int, float]] = {}
+        info_data_e_hora: dict[str, str | int | float] = {}
         info_data_e_hora.update(timestamps)
         info_data_e_hora.update(datas_formatadas)
 

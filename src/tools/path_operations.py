@@ -47,7 +47,7 @@ class GerenciadorDeCaminhos:
     def _sanitizar_path(caminho_bruto: str | Path) -> Path:
         """Sanitiza e normaliza o caminho fornecido."""
         caminho_str: str = str(caminho_bruto).strip()
-        caminho_normalizado = re.sub(r"[\\]+", "/", caminho_str)
+        caminho_normalizado: str = re.sub(r"[\\]+", "/", caminho_str)
         return Path(caminho_normalizado).expanduser().resolve(strict=False)
 
     def _determinar_tipo(self) -> str:

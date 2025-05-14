@@ -1,0 +1,185 @@
+# ============================================================
+# Configuração do sistema de build
+# ============================================================
+
+[build-system]
+# Dependências necessárias para construir o projeto
+requires = ["setuptools", "wheel"]
+# Backend de build utilizado
+build-backend = "setuptools.build_meta"
+
+# ============================================================
+# Metadados do projeto
+# ============================================================
+[project]
+# Nome do projeto
+name = "tkinter-mvc-app"
+# Versão do projeto
+version = "0.1.0"
+# Descrição breve do projeto
+description = "Aplicativo MVC com Tkinter para gestão de arquivos"
+# Informações sobre os autores
+authors = [{name = "Pedro Dias", email = "engenheiro.diaspedro.qas@gmail.com"}]
+# Caminho para o arquivo README
+readme = "README.md"
+# Versão mínima do Python necessária
+requires-python = ">=3.11"
+# Licença do projeto
+license = {text = "MIT"}
+# Classificadores para indexação no PyPI
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.11"
+]
+# ============================================================
+# Dependências do projeto
+# ============================================================
+dependencies = [
+  # Bibliotecas para interface gráfica com Tkinter
+  "ttkbootstrap>=1.12,<2.0",
+  "ttkthemes>=3.2,<4.0",
+  # Biblioteca para parsing de HTML
+  "beautifulsoup4>=4.12,<5.0",
+  # Biblioteca para requisições HTTP
+  "requests>=2.31,<3.0",
+  # Gerenciamento de variáveis de ambiente
+  "python-dotenv>=1.0,<2.0",
+  # Ferramentas de desenvolvimento e formatação de código
+  "black>=24.3,<26.0",
+  "isort>=5.13,<7.0",
+  "flake8>=7.0,<8.0",
+  "mypy>=1.8,<2.0",
+  # Shell interativo avançado
+  "ipython>=8.22,<10.0",
+  # Ferramenta para automação de ganchos de pré-commit
+  "pre-commit>=3.6,<5.0",
+  # Framework de testes e cobertura de código
+  "pytest>=8.1,<9.0",
+  "pytest-cov>=4.1,<7.0",
+  "coverage>=7.4,<8.0",
+  # Biblioteca para suporte a interface gráfica alternativa (PyQt5)
+  "pyqt5>=5.15,<6.0"
+]
+
+# ============================================================
+# Configuração do bandit (análise de segurança)
+# ============================================================
+[tool.bandit]
+# Diretórios alvo para análise
+targets = ["src"]
+# Ignorar verificações específicas:
+# - B101: Uso de `assert` (não recomendado em produção)
+skips = ["B101"]
+
+# ============================================================
+# Configuração do black (formatação de código)
+# ============================================================
+[tool.black]
+# Comprimento máximo de linha
+line-length = 100
+# Versão alvo do Python
+target-version = ["py38"]
+
+# ============================================================
+# Configuração do coverage (cobertura de código)
+# ============================================================
+[tool.coverage]
+[tool.coverage.report]
+# Ignorar arquivos totalmente cobertos
+skip_covered = true
+# Arquivos a serem omitidos do relatório:
+# - tests/*: Arquivos de teste
+omit = [
+  "tests/*"
+]
+
+# ============================================================
+# Configuração do flake8 (análise estática de código)
+# ============================================================
+[tool.flake8]
+config = ".config/development/.flake8"
+# Comprimento máximo de linha
+max_line_length = 100
+
+# ============================================================
+# Configuração do isort (organização de imports)
+# ============================================================
+[tool.isort]
+# Perfil de formatação compatível com o black
+profile = "black"
+# Comprimento máximo de linha
+line_length = 100
+# Bibliotecas de terceiros conhecidas
+known_third_party = ["ttkbootstrap", "requests"]
+# Bibliotecas do projeto
+known_first_party = ["tkinter_mvc_app"]
+# Configuração de saída multi-linha
+multi_line_output = 3
+# Adicionar vírgula ao final de listas
+include_trailing_comma = true
+# Forçar ordenação dentro de seções
+force_sort_within_sections = true
+
+# ============================================================
+# Configuração do mypy (verificação de tipos estáticos)
+# ============================================================
+[tool.mypy]
+# Versão do Python alvo
+python_version = "3.11"
+# Configurações de aviso e erro
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+# Ignorar imports ausentes (exemplo: bibliotecas C não verificadas pelo mypy)
+ignore_missing_imports = true
+# Suporte a pacotes namespace
+namespace_packages = true
+
+# ============================================================
+# Configuração do pydocstyle (estilo de docstrings)
+# ============================================================
+[tool.pydocstyle]
+# Convenção de estilo de docstrings
+convention = "google"
+
+# ============================================================
+# Configuração do pylint (análise estática de código)
+# ============================================================
+[tool.pylint]
+rcfile = ".config/development/.pylintrc"
+# Comprimento máximo de linha
+max-line-length = 100
+# Desabilitar verificações específicas:
+# - R0902: Many instance attributes (muitas variáveis de instância em uma classe)
+# - R0903: Too few public methods (muito poucos métodos públicos em uma classe)
+# - E0015: Mixed line endings (mistura de finais de linha)
+disable = ["R0902", "R0903", "E0015"]
+
+# ============================================================
+# Configuração do pytest
+# ============================================================
+[tool.pytest]
+[tool.pytest.ini_options]
+config_file = ".config/development/pytest.ini"
+# Versão mínima do pytest necessária
+minversion = "8.0"
+# Opções adicionais para execução de testes
+addopts = "--cov=tkinter_mvc_app --cov-report=term --cov-report=html"
+# Diretórios onde os testes estão localizados
+testpaths = ["tests"]
+# Padrão de nomes de arquivos de teste
+python_files = "test_*.py"
+# Configuração para tratar warnings como erros
+filterwarnings = ["error"]
+
+# ============================================================
+# Configuração do tox (ambientes de teste)
+# ============================================================
+[tool.tox]
+# Lista de ambientes configurados
+envlist = ["py311", "lint", "mypy"]

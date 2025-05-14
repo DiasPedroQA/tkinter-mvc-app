@@ -187,3 +187,12 @@ cython_debug/
 .logs_makefile/app.log
 .logs_makefile/
 old/*
+
+# Exceto os symlinks, ignore os arquivos reais na raiz
+.flake8
+.pylintrc
+pytest.ini
+.pre-commit-config.yaml
+
+# Mantenha os arquivos reais em .config/
+!.config/

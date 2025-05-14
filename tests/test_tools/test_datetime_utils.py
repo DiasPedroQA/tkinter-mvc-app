@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C, W
+# pylint: disable=C, W, I
 
 """Testes para o módulo FormatadorDeDataHora (datetime_utils.py)."""
 
@@ -13,37 +13,50 @@ from src.tools.datetime_utils import FormatadorDeDataHora
 def test_formatar_data() -> None:
     """Testa a formatação de uma data a partir de um timestamp fixo."""
     timestamp = 1700000000.0  # equivalente a 14/11/2023
-    f = FormatadorDeDataHora(None, None, None, None)
-    resultado = f._formatar_data(timestamp)
+    f = FormatadorDeDataHora(
+        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=None
+    )
+    resultado: str = f._formatar_data(timestamp=timestamp)
     assert resultado.startswith("14/11/2023")
 
 
 def test_dias_desde() -> None:
     """Testa a quantidade de dias desde uma data passada."""
     dias_atras = 10
-    timestamp = (datetime.now() - timedelta(days=dias_atras)).timestamp()
-    f = FormatadorDeDataHora(None, None, None, None)
-    resultado = f._dias_desde(timestamp)
+    timestamp: float = (datetime.now() - timedelta(days=dias_atras)).timestamp()
+    f = FormatadorDeDataHora(
+        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=None
+    )
+    resultado: int = f._dias_desde(timestamp=timestamp)
     assert resultado == dias_atras
 
 
 def test_timestamp_ha_n_dias_atras() -> None:
     """Testa se o timestamp gerado há N dias bate com o esperado (tolerância de 2 segundos)."""
     dias = 5
-    f = FormatadorDeDataHora(None, None, None, dias)
-    resultado = f._timestamp_ha_n_dias_atras(dias)
-    esperado = (datetime.now() - timedelta(days=dias)).timestamp()
+    f = FormatadorDeDataHora(
+        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=dias
+    )
+    resultado: float = f._timestamp_ha_n_dias_atras(dias=dias)
+    esperado: float = (datetime.now() - timedelta(days=dias)).timestamp()
     assert abs(resultado - esperado) < 2  # tolerância de 2 segundos
 
 
 def test_adicionar_info_timestamp() -> None:
     """Testa se os dicionários são preenchidos corretamente com as informações do timestamp."""
-    f = FormatadorDeDataHora(None, None, None, None)
-    timestamp = datetime(2024, 1, 1, 12, 0, 0).timestamp()
+    f = FormatadorDeDataHora(
+        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=None
+    )
+    timestamp: float = datetime(year=2024, month=1, day=1, hour=12, minute=0, second=0).timestamp()
 
     dict_ts: dict = {}
     dict_datas: dict = {}
-    f._adicionar_info_timestamp("modificacao", timestamp, dict_ts, dict_datas)
+    f._adicionar_info_timestamp(
+        chave_base="modificacao",
+        timestamp=timestamp,
+        dict_timestamps=dict_ts,
+        dict_datas=dict_datas,
+    )
 
     assert "timestamp_modificacao" in dict_ts
     assert "data_modificacao_formatada" in dict_datas
@@ -57,10 +70,10 @@ def test_adicionar_info_timestamp() -> None:
 def test_infos_de_data_e_hora() -> None:
     """Testa o dicionário final retornado com todas as combinações preenchidas."""
     dias = 7
-    agora = datetime.now()
-    timestamp_mod = (agora - timedelta(days=2)).timestamp()
-    timestamp_acesso = (agora - timedelta(days=5)).timestamp()
-    timestamp_criacao = (agora - timedelta(days=10)).timestamp()
+    agora: datetime = datetime.now()
+    timestamp_mod: float = (agora - timedelta(days=2)).timestamp()
+    timestamp_acesso: float = (agora - timedelta(days=5)).timestamp()
+    timestamp_criacao: float = (agora - timedelta(days=10)).timestamp()
 
     f = FormatadorDeDataHora(
         timestamp_modificacao=timestamp_mod,
@@ -69,10 +82,10 @@ def test_infos_de_data_e_hora() -> None:
         dias_antes=dias,
     )
 
-    resultado = f.infos_de_data_e_hora()
+    resultado: dict[str, str | int | float] = f.infos_de_data_e_hora()
 
     # Verifica se todas as chaves esperadas estão presentes
-    chaves_esperadas = [
+    chaves_esperadas: list[str] = [
         "timestamp_modificacao",
         "timestamp_acesso",
         "timestamp_criacao",
@@ -90,5 +103,5 @@ def test_infos_de_data_e_hora() -> None:
         assert chave in resultado
 
     # Verifica os tipos das saídas
-    for chave, valor in resultado.items():
+    for _, valor in resultado.items():
         assert isinstance(valor, (str, int, float))
