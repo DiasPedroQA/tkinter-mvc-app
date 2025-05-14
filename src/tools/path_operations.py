@@ -6,8 +6,8 @@ Módulo para manipulação e análise de caminhos de arquivos e pastas com uso d
 """
 
 import os
-from pathlib import Path
 import re
+from pathlib import Path
 
 from src.tools.datetime_utils import FormatadorDeDataHora
 
@@ -25,7 +25,9 @@ class GerenciadorDeCaminhos:
             caminho_entrada: Caminho absoluto ou relativo (str ou Path).
         """
         self._caminho_original: str = str(caminho_entrada)
-        self._caminho_sanitizado: Path = self._sanitizar_path(caminho_bruto=caminho_entrada)
+        self._caminho_sanitizado: Path = self._sanitizar_path(
+            caminho_bruto=caminho_entrada
+        )
 
         self._existe: bool = self._caminho_sanitizado.exists()
         self._tipo: str = self._determinar_tipo()
@@ -34,12 +36,18 @@ class GerenciadorDeCaminhos:
         )
 
         self._tamanho_bytes: int = self._obter_tamanho()
-        self._tamanho_formatado: str = self._formatar_tamanho(tamanho_bytes=self._tamanho_bytes)
+        self._tamanho_formatado: str = self._formatar_tamanho(
+            tamanho_bytes=self._tamanho_bytes
+        )
 
         self._gerenciador_data_hora = FormatadorDeDataHora(
-            timestamp_modificacao=self._estatisticas.st_mtime if self._estatisticas else 0.0,
+            timestamp_modificacao=(
+                self._estatisticas.st_mtime if self._estatisticas else 0.0
+            ),
             timestamp_acesso=self._estatisticas.st_atime if self._estatisticas else 0.0,
-            timestamp_criacao=self._estatisticas.st_ctime if self._estatisticas else 0.0,
+            timestamp_criacao=(
+                self._estatisticas.st_ctime if self._estatisticas else 0.0
+            ),
             dias_antes=7,
         )
 
@@ -63,7 +71,9 @@ class GerenciadorDeCaminhos:
         if self._caminho_sanitizado.is_file():
             return self._estatisticas.st_size if self._estatisticas else 0
         # Soma recursiva do tamanho dos arquivos em uma pasta
-        return sum(f.stat().st_size for f in self._caminho_sanitizado.rglob("*") if f.is_file())
+        return sum(
+            f.stat().st_size for f in self._caminho_sanitizado.rglob("*") if f.is_file()
+        )
 
     @staticmethod
     def _formatar_tamanho(tamanho_bytes: int) -> str:
@@ -133,14 +143,22 @@ class GerenciadorDeCaminhos:
             "timestamp_modificacao": info_data_e_hora.get("timestamp_modificacao", 0.0),
             "timestamp_acesso": info_data_e_hora.get("timestamp_acesso", 0.0),
             "timestamp_criacao": info_data_e_hora.get("timestamp_criacao", 0.0),
-            "timestamp_n_dias_atras": info_data_e_hora.get("timestamp_n_dias_atras", 0.0),
-            "data_modificacao_formatada": info_data_e_hora.get("data_modificacao_formatada", ""),
+            "timestamp_n_dias_atras": info_data_e_hora.get(
+                "timestamp_n_dias_atras", 0.0
+            ),
+            "data_modificacao_formatada": info_data_e_hora.get(
+                "data_modificacao_formatada", ""
+            ),
             "dias_desde_modificacao": info_data_e_hora.get("dias_desde_modificacao", 0),
             "data_acesso_formatada": info_data_e_hora.get("data_acesso_formatada", ""),
             "dias_desde_acesso": info_data_e_hora.get("dias_desde_acesso", 0),
-            "data_criacao_formatada": info_data_e_hora.get("data_criacao_formatada", ""),
+            "data_criacao_formatada": info_data_e_hora.get(
+                "data_criacao_formatada", ""
+            ),
             "dias_desde_criacao": info_data_e_hora.get("dias_desde_criacao", 0),
-            "data_n_dias_atras_formatada": info_data_e_hora.get("data_n_dias_atras_formatada", ""),
+            "data_n_dias_atras_formatada": info_data_e_hora.get(
+                "data_n_dias_atras_formatada", ""
+            ),
         }
 
         return {

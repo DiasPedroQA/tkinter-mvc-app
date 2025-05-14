@@ -1,0 +1,7 @@
+exclude_dirs:
+  - .venv
+  - tests
+
+skips:
+  - B101  # assert usado em testes
+  - B404  # subprocess considerado seguro no contexto

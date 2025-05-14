@@ -63,7 +63,9 @@ def test_tamanho_arquivo(arquivo_teste: Path) -> None:
 def test_tamanho_pasta(pasta_teste: Path) -> None:
     gerenciador = GerenciadorDeCaminhos(caminho_entrada=pasta_teste)
     assert gerenciador._tamanho_bytes > 0
-    assert "KB" in gerenciador._tamanho_formatado or "B" in gerenciador._tamanho_formatado
+    assert (
+        "KB" in gerenciador._tamanho_formatado or "B" in gerenciador._tamanho_formatado
+    )
 
 
 def test_permissoes(arquivo_teste: Path) -> None:

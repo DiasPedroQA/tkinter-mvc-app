@@ -14,7 +14,10 @@ def test_formatar_data() -> None:
     """Testa a formatação de uma data a partir de um timestamp fixo."""
     timestamp = 1700000000.0  # equivalente a 14/11/2023
     f = FormatadorDeDataHora(
-        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=None
+        timestamp_modificacao=None,
+        timestamp_acesso=None,
+        timestamp_criacao=None,
+        dias_antes=None,
     )
     resultado: str = f._formatar_data(timestamp=timestamp)
     assert resultado.startswith("14/11/2023")
@@ -25,7 +28,10 @@ def test_dias_desde() -> None:
     dias_atras = 10
     timestamp: float = (datetime.now() - timedelta(days=dias_atras)).timestamp()
     f = FormatadorDeDataHora(
-        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=None
+        timestamp_modificacao=None,
+        timestamp_acesso=None,
+        timestamp_criacao=None,
+        dias_antes=None,
     )
     resultado: int = f._dias_desde(timestamp=timestamp)
     assert resultado == dias_atras
@@ -35,7 +41,10 @@ def test_timestamp_ha_n_dias_atras() -> None:
     """Testa se o timestamp gerado há N dias bate com o esperado (tolerância de 2 segundos)."""
     dias = 5
     f = FormatadorDeDataHora(
-        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=dias
+        timestamp_modificacao=None,
+        timestamp_acesso=None,
+        timestamp_criacao=None,
+        dias_antes=dias,
     )
     resultado: float = f._timestamp_ha_n_dias_atras(dias=dias)
     esperado: float = (datetime.now() - timedelta(days=dias)).timestamp()
@@ -45,9 +54,14 @@ def test_timestamp_ha_n_dias_atras() -> None:
 def test_adicionar_info_timestamp() -> None:
     """Testa se os dicionários são preenchidos corretamente com as informações do timestamp."""
     f = FormatadorDeDataHora(
-        timestamp_modificacao=None, timestamp_acesso=None, timestamp_criacao=None, dias_antes=None
+        timestamp_modificacao=None,
+        timestamp_acesso=None,
+        timestamp_criacao=None,
+        dias_antes=None,
     )
-    timestamp: float = datetime(year=2024, month=1, day=1, hour=12, minute=0, second=0).timestamp()
+    timestamp: float = datetime(
+        year=2024, month=1, day=1, hour=12, minute=0, second=0
+    ).timestamp()
 
     dict_ts: dict = {}
     dict_datas: dict = {}

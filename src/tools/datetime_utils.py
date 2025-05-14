@@ -4,8 +4,8 @@
 Módulo com utilitários para manipulação de datas e horários usando timestamp (float).
 """
 
-from datetime import datetime, timedelta
 import locale
+from datetime import datetime, timedelta
 
 try:
     locale.setlocale(category=locale.LC_TIME, locale="pt_BR.UTF-8")
@@ -30,10 +30,14 @@ class FormatadorDeDataHora:
         self.timestamp_criacao: float | None = timestamp_criacao
         self.dias_antes: int | None = dias_antes
         self.timestamp_n_dias_atras: float | None = (
-            self._timestamp_ha_n_dias_atras(dias=dias_antes) if dias_antes is not None else None
+            self._timestamp_ha_n_dias_atras(dias=dias_antes)
+            if dias_antes is not None
+            else None
         )
 
-    def _formatar_data(self, timestamp: float, formato: str = "%d/%m/%Y %H:%M:%S") -> str:
+    def _formatar_data(
+        self, timestamp: float, formato: str = "%d/%m/%Y %H:%M:%S"
+    ) -> str:
         """Converte um timestamp em uma string de data formatada.
 
         Args:
@@ -84,10 +88,14 @@ class FormatadorDeDataHora:
             dict_datas (dict): Dicionário que receberá datas formatadas e dias.
         """
         dict_timestamps[f"timestamp_{chave_base}"] = timestamp
-        dict_datas[f"data_{chave_base}_formatada"] = self._formatar_data(timestamp=timestamp)
+        dict_datas[f"data_{chave_base}_formatada"] = self._formatar_data(
+            timestamp=timestamp
+        )
 
         if chave_base != "n_dias_atras":
-            dict_datas[f"dias_desde_{chave_base}"] = self._dias_desde(timestamp=timestamp)
+            dict_datas[f"dias_desde_{chave_base}"] = self._dias_desde(
+                timestamp=timestamp
+            )
 
     def infos_de_data_e_hora(self) -> dict[str, str | int | float]:
         """

@@ -7,17 +7,28 @@ on:
     branches: [ "main" ]
 
 jobs:
-  Makefile:
+  ci:
+    name: 🚧 CI Pipeline
     runs-on: ubuntu-latest
 
     steps:
       - name: 🔄 Checkout repo
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
+      - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: 🐍 Cache Python & Pre-commit dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/pre-commit
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: 📦 Install dependencies via Makefile
         run: make install
@@ -31,14 +42,14 @@ jobs:
       - name: 🧹 Lint code
         run: make lint
 
-      - name: 🔍 Static typing
+      - name: 🔍 Static typing with mypy
         run: make mypy
 
-      - name: 🔒 Security check
+      - name: 🔒 Run security checks
         run: make security
 
       - name: 🧪 Generate coverage report
         run: make coverage
 
-      - name: 🧼 Clean up
+      - name: 🧼 Clean up workspace
         run: make clean
