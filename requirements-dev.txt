@@ -1,8 +1,19 @@
 -r requirements.txt
-bandit
-pytest
-mypy
-flake8
-black
-isort
-pre-commit
+
+# Design GUI
+PyQt5==5.15.10  # Para prototipagem avançada
+
+# Testes
+pytest==8.2.0          # Última versão estável
+pytest-cov==4.1.0      # Compatível com pytest 8.x
+
+# Análise de código
+flake8==7.0.0          # Versão estável
+mypy==1.10.0           # Versão LTS recomendada
+bandit==1.7.7          # Versão mais estável
+
+# Git hooks
+pre-commit==3.7.0      # Versão mais compatível
+
+# Ambiente de desenvolvimento
+ipython==8.23.0        # Shell interativo melhorado
