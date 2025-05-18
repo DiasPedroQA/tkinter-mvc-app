@@ -3,7 +3,7 @@ ttkbootstrap==1.13.3  # Última versão estável (05/2024)
 ttkthemes==3.2.2      # Mantido (projeto parece descontinuado)
 
 # Utilitários
-beautifulsoup4==4.12.3  # Atualizado para última estável
+beautifulsoup4==4.13.4  # Atualizado para última estável
 requests==2.32.3        # Mantido (versão recente e segura)
 python-dotenv==1.0.1    # Versão simplificada (1.x é estável)
 
