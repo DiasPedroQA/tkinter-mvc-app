@@ -8,7 +8,7 @@ pytest==8.2.0          # Última versão estável
 pytest-cov==4.1.0      # Compatível com pytest 8.x
 
 # Análise de código
-flake8==7.0.0          # Versão estável
+flake8==7.2.0          # Versão estável
 mypy==1.10.0           # Versão LTS recomendada
 bandit==1.7.7          # Versão mais estável
 
