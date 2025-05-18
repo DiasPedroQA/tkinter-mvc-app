@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+# # -*- coding: utf-8 -*-
 
-"""This file is intentionally left blank."""
+# """This file is intentionally left blank."""
 
-from src.tools.datetime_utils import FormatadorDeDataHora
-from src.tools.path_operations import GerenciadorDeCaminhos
+# from .datetime_utils import GerenciadorDatas
+# from .path_operations import GerenciadorDeCaminhos
 
-__all__ = ["FormatadorDeDataHora", "GerenciadorDeCaminhos"]
+# __all__: list[str] = ["GerenciadorDatas", "GerenciadorDeCaminhos"]

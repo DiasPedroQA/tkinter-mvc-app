@@ -1,19 +1,58 @@
-# -*- coding: utf-8 -*-
-
+# # src/main.py
+# # -*- coding: utf-8 -*-
 # """
-# Código para testar o servidor de arquivos.
+# Módulo principal da aplicação.
+
+# Este módulo serve como ponto de entrada para simular a leitura de caminhos
+# de arquivos e pastas. Ele utiliza o controlador `PathManagerController`
+# para identificar e processar os dados dos caminhos informados.
+
+# Ao executar este módulo diretamente, são analisados:
+# - Um caminho de pasta (para listar o conteúdo).
+# - Um caminho de arquivo (para obter metadados e informações relevantes).
+
+# Classes:
+#     PathManagerController
+
+# Funções:
+#     main -- função principal que executa a simulação de leitura de caminhos.
 # """
 
-# import platform
-# import getpass
-# from controllers.file_manager_controller import GerenciadorArquivos
+# from controllers.path_manager_controller import PathController
+
+
+# def main() -> None:
+#     """
+#     Executa a simulação de leitura e análise de caminhos.
+
+#     Esta função inicializa o controlador `PathManagerController`, fornece
+#     dois caminhos (um de pasta e outro de arquivo) e imprime no terminal
+#     os resultados da leitura, organizados em dicionários com dados formatados.
+
+#     Exemplos:
+#         📁 Analisando pasta:
+#         {'tipo': 'pasta', 'conteudo': [...], ...}
+
+#         📄 Analisando arquivo:
+#         {'tipo': 'arquivo', 'extensao': '.html', ...}
+#     """
+#     caminho_pasta = "/home/pedro-pm-dias/Downloads/Firefox/"
+#     # "~/Downloads/Firefox/"
+#     caminho_arquivo = "/home/pedro-pm-dias/Downloads/Firefox/bookmarks.html"
+#     # "~/Downloads/Firefox/bookmarks.html"
+
+#     controller = PathController()
+
+#     print("📁 Analisando pasta:")
+#     pasta: dict[str, str] = controller.read(
+#         caminho=caminho_pasta, ler_conteudo=True, recursivo=True
+#     )
+#     print(pasta)
+
+#     print("\n📄 Analisando arquivo:")
+#     arquivo: dict[str, str] = controller.read(caminho=caminho_arquivo)
+#     print(arquivo)
 
 
 # if __name__ == "__main__":
-#     sistema = platform.system().capitalize()
-#     usuario = getpass.getuser()
-#     base_usuario = f"/home/{usuario}" if sistema == "Linux" else f"C:\\Users\\{usuario}"
-
-#     gerenciador = GerenciadorArquivos(sistema, usuario, base_usuario)
-#     resultado = gerenciador.server_analisar_caminhos("/home/pedro-pm-dias/Downloads")
-#     print(resultado)
+#     main()
