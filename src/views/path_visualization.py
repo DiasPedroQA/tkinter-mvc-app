@@ -1,38 +1,37 @@
-# # src/views/path_visualization.py
+# from models.path_system_model import CaminhoModel
 
-# class VisualizadorDeCaminhos:
-#     """Apresenta dados de objetos de arquivo ou pasta."""
 
-#     def exibir_arquivo(self, arquivo: dict) -> str:
-#         linhas: list[str] = [
-#             f"📄 Arquivo: {arquivo['nome']}",
-#             f"Extensão: {arquivo['extensao']}",
-#             f"Caminho: {arquivo['caminho']}",
-#             f"Tamanho: {arquivo['tamanho']} bytes",
-#             f"Permissões: {arquivo['permissoes']}",
-#             f"Usuário: {arquivo['usuario']}",
-#             f"Criado em: {arquivo['criacao']}",
-#             f"Modificado em: {arquivo['modificacao']}",
-#             f"Acessado em: {arquivo['acesso']}",
-#             f"Oculto: {'Sim' if arquivo['oculto'] else 'Não'}",
-#             f"Link simbólico: {'Sim' if arquivo['link'] else 'Não'}",
-#             f"Montagem: {'Sim' if arquivo['montagem'] else 'Não'}",
-#         ]
-#         return "\n".join(linhas)
+# def exibir_tabela_json(lista_modelos: list[dict[str, CaminhoModel]]) -> None:
+#     if not lista_modelos:
+#         print("Nenhum caminho válido encontrado.")
+#         return
 
-#     def exibir_pasta(self, pasta: dict) -> str:
-#         linhas: list[str] = [
-#             f"📁 Pasta: {pasta['nome']}",
-#             f"Caminho: {pasta['caminho']}",
-#             f"Itens: {pasta['quantidade_itens']}",
-#             f"Conteúdo: {', '.join(pasta['conteudo'])}",
-#             f"Permissões: {pasta['permissoes']}",
-#             f"Usuário: {pasta['usuario']}",
-#             f"Criada em: {pasta['criacao']}",
-#             f"Modificada em: {pasta['modificacao']}",
-#             f"Acessada em: {pasta['acesso']}",
-#             f"Oculta: {'Sim' if pasta['oculto'] else 'Não'}",
-#             f"Link simbólico: {'Sim' if pasta['link'] else 'Não'}",
-#             f"Montagem: {'Sim' if pasta['montagem'] else 'Não'}",
-#         ]
-#         return "\n".join(linhas)
+#     # Obtemos os nomes das colunas
+#     colunas = list(lista_modelos[0].keys())
+
+#     # Calcula a largura máxima de cada coluna
+#     larguras: dict[str, int] = {
+#         coluna: max(
+#             len(str(coluna)), max(len(str(item[coluna])) for item in lista_modelos)
+#         )
+#         for coluna in colunas
+#     }
+
+#     # Função para imprimir uma linha formatada
+#     def formatar_linha(valores: list[str]) -> str:
+#         return " | ".join(f"{v:<{larguras[c]}}" for v, c in zip(valores, colunas))
+
+#     # Linha de separação
+#     separador: str = "-+-".join("-" * larguras[c] for c in colunas)
+
+#     # Cabeçalho
+#     print("\n📁 Tabela de Caminhos:\n")
+#     print(formatar_linha(valores=colunas))
+#     print(separador)
+
+#     # Dados
+#     for item in lista_modelos:
+#         valores: list[str] = [str(item[c]) for c in colunas]
+#         print(formatar_linha(valores=valores))
+
+#     print()  # Linha em branco ao final
