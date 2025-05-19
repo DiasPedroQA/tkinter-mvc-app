@@ -1,7 +1,7 @@
 -r requirements.txt
 
 # Design GUI
-PyQt5==5.15.10  # Para prototipagem avançada
+PyQt5==5.15.11  # Para prototipagem avançada
 
 # Testes
 pytest==8.2.0          # Última versão estável
