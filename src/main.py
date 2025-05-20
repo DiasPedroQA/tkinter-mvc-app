@@ -1,19 +1,47 @@
+# pylint: disable=missing-function-docstring, missing-module-docstring
+
+# src/main.py
+
+# import sys
+
 # from controllers.path_manager_controller import PathController
-# from models.path_system_model import CaminhoModel
-# from views.path_visualization import exibir_tabela_json
+# from views.path_visualization import PathView
+
+
+# def iniciar_gui() -> None:
+#     app = PathView()
+#     app.mainloop()
+
+
+# def iniciar_terminal() -> None:
+#     controller = PathController()
+#     PathView.exibir_cabecalho("Explorador de Caminhos (Terminal)")
+
+#     caminho = input("Digite o caminho a ser explorado: ").strip()
+#     if not caminho:
+#         PathView.exibir_mensagem("alerta", "Nenhum caminho fornecido.")
+#         return
+
+#     try:
+#         dados = controller.ler_caminho(caminho)
+#         if dados["tipo"] == "diretorio":
+#             PathView.exibir_conteudo_diretorio(caminho, dados["filhos"])
+#         else:
+#             conteudo = controller.ler_arquivo_texto(caminho)
+#             PathView.exibir_conteudo_arquivo(caminho, conteudo)
+#     except Exception as e:
+#         PathView.exibir_erro(e)
 
 
 # def main() -> None:
-#     caminhos: list[str] = [
-#         "~/Documentos",
-#         "~/Downloads/Firefox/bookmarks.html",
-#         "~/Downloads/Firefox/",
-#         "~/Downloads/Firefox/nao_existe",
-#     ]
+#     modo = "gui"  # padrão pode ser "gui" ou "terminal"
+#     if len(sys.argv) > 1 and sys.argv[1].lower() == "terminal":
+#         modo = "terminal"
 
-#     controller = PathController(caminhos=caminhos)
-#     resultados: list[dict[str, CaminhoModel]] = controller.ler_caminhos()
-#     exibir_tabela_json(lista_modelos=resultados)
+#     if modo == "terminal":
+#         iniciar_terminal()
+#     else:
+#         iniciar_gui()
 
 
 # if __name__ == "__main__":
